@@ -1,0 +1,19 @@
+@import '~bulma/sass/utilities/_all';
+
+.tr-trailing-input {
+    position:absolute;
+    top:50%;
+    transform:translateY(-50%);
+    right: 8px;
+    border:none;
+    background:transparent,;
+    -webkit-transform:translateY(-50%);
+    -moz-transform:translateY(-50%);
+    -ms-transform:translateY(-50%);
+    -o-transform:translateY(-50%);
+}
+
+.tr-trailing-input:hover {
+    color:$success;
+    cursor: pointer;
+}
