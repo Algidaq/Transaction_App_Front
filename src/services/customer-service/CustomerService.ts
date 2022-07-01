@@ -7,6 +7,7 @@ import { AxiosResponseHeaders } from 'axios';
 export abstract class ICustomerService {
   abstract get accountService(): ICustomerAccountService;
   abstract addNewCustomer(customer: IPostCustomer): Promise<Customer>;
+  abstract getCustomerById(id: string): Promise<Customer>;
   abstract getAllCustomers(
     params: CustomerQueryParams
   ): Promise<IGetList<Customer>>;
@@ -20,6 +21,11 @@ export class CustomerService extends BaseService implements ICustomerService {
   get route(): string {
     return '/customers';
   }
+
+  get accountService(): ICustomerAccountService {
+    return this._accountService;
+  }
+
   async addNewCustomer(customer: IPostCustomer): Promise<Customer> {
     try {
       const { data }: { data: IGetCustomer } = await this.post(customer);
@@ -28,8 +34,14 @@ export class CustomerService extends BaseService implements ICustomerService {
       return Promise.reject(e);
     }
   }
-  get accountService(): ICustomerAccountService {
-    return this._accountService;
+
+  async getCustomerById(id: string): Promise<Customer> {
+    try {
+      const { data }: { data: IGetCustomer } = await this.getById(id, {});
+      return Customer.fromJson(data);
+    } catch (e) {
+      return Promise.reject(e);
+    }
   }
 
   async getAllCustomers(

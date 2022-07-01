@@ -7,14 +7,13 @@ export class Customer {
   private _accounts!: CustomerAccount[];
   private _updateDate?: string;
   private constructor() {}
-  static fromJson(json: IGetCustomer): Customer {
+  static fromJson(json: Partial<IGetCustomer>): Customer {
     const customer = new Customer();
     customer._id = json.id;
     customer._name = json.fullName;
     customer._phone = json.phone;
-    customer._accounts = json.accounts.map((data) =>
-      CustomerAccount.fromJson(data)
-    );
+    customer._accounts =
+      json.accounts?.map((data) => CustomerAccount.fromJson(data)) ?? [];
     customer._updateDate = json.updateDate;
     return customer;
   }

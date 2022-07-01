@@ -23,6 +23,9 @@ import CurrencyListPage from './pages/currency-pages/currency-list-page/Currency
 import RoleListPage from './pages/role-pages/role-list-page/RoleListPage';
 import UserListPage from './pages/user-pages/user-list-page/UserListPage';
 import CustomerListPage from './pages/customer-pages/customer-list-page/CustomerListPage';
+import { TransactionServiceContext } from './services/transaction-service/context/TransactionServiceContext';
+import { TransactionService } from './services/transaction-service/TransactionService';
+import DepositePage from './pages/transactions/deposite-page/DepositePage';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -31,18 +34,20 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <BrowserRouter>
-      <CustomerServiceContext.Provider
-        value={new CustomerService(new CustomerAccountService())}
-      >
-        <CurrencyServiceContext.Provider value={new CurrencyService()}>
-          <UserServiceContext.Provider value={new UserService()}>
-            <UserRoleServiceContext.Provider value={new UserRoleService()}>
-              <CustomerListPage />
-              <ToastContainer />
-            </UserRoleServiceContext.Provider>
-          </UserServiceContext.Provider>
-        </CurrencyServiceContext.Provider>
-      </CustomerServiceContext.Provider>
+      <TransactionServiceContext.Provider value={new TransactionService()}>
+        <CustomerServiceContext.Provider
+          value={new CustomerService(new CustomerAccountService())}
+        >
+          <CurrencyServiceContext.Provider value={new CurrencyService()}>
+            <UserServiceContext.Provider value={new UserService()}>
+              <UserRoleServiceContext.Provider value={new UserRoleService()}>
+                <DepositePage transactionType={'withdraw'} />
+                <ToastContainer />
+              </UserRoleServiceContext.Provider>
+            </UserServiceContext.Provider>
+          </CurrencyServiceContext.Provider>
+        </CustomerServiceContext.Provider>
+      </TransactionServiceContext.Provider>
     </BrowserRouter>
   </React.StrictMode>
 );
