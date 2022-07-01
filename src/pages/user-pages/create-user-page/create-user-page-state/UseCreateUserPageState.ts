@@ -1,6 +1,6 @@
-import { BaseState } from '../../../base/BaseState';
-import { StateEnum } from '../../../enums/StateEnum';
-import { Role } from '../../role-pages/create-role-page/UserRoleForm';
+import { BaseState } from '../../../../base/BaseState';
+import { StateEnum } from '../../../../enums/StateEnum';
+import { Role } from '../../../role-pages/create-role-page/UserRoleForm';
 export class CreateUserPageState extends BaseState {
   constructor(
     stateEnum: StateEnum,

@@ -1,12 +1,12 @@
 import { Formik, Form } from 'formik';
 import { FunctionComponent, useContext } from 'react';
-import Container from '../../components/Container/Container';
-import { CurrencyServiceContext } from '../../services/currency-service/context/CurrencyServiceContext';
+import Container from '../../../components/Container/Container';
+import { CurrencyServiceContext } from '../../../services/currency-service/context/CurrencyServiceContext';
 import { useCreateCustomerPage } from './create-customer-page-state/useCreateCustomerPage';
 import { createCustomerValidationSchema } from './create-customer-page-state/CreateCustomerPageForm';
-import Input from '../../components/Input/Input';
-import Button from '../../components/Button/Button';
-import { CustomerServiceContext } from '../../services/customer-service/context/CustomerServiceContext';
+import Input from '../../../components/Input/Input';
+import Button from '../../../components/Button/Button';
+import { CustomerServiceContext } from '../../../services/customer-service/context/CustomerServiceContext';
 
 interface CreateCustomerPageProps {}
 

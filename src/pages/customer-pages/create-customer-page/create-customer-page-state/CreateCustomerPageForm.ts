@@ -1,4 +1,4 @@
-import { Currency } from '../../../services/currency-service/model/Currency';
+import { Currency } from '../../../../services/currency-service/model/Currency';
 import * as Yup from 'yup';
 export interface CreateCustomerPageForm {
   fullName: string;

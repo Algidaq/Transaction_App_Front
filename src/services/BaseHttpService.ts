@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { AxiosResponseHeaders } from 'axios';
 
 export abstract class BaseService {
   abstract get route(): string;
@@ -22,5 +23,15 @@ export abstract class BaseService {
 
   delete(id: any) {
     return axios.delete(this.fullPath + `/${id}`);
+  }
+
+  getPaginationHeader(headers: AxiosResponseHeaders): {
+    pages: number;
+    count: number;
+  } {
+    return {
+      pages: Number.parseInt(headers['total-pages'] ?? '1'),
+      count: Number.parseInt(headers['count'] ?? '10'),
+    };
   }
 }

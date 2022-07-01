@@ -34,6 +34,16 @@ export class User {
   get phone(): string {
     return this._phone ?? 'N/A';
   }
+
+  get createDate(): string {
+    const now = new Date().toLocaleDateString();
+    return new Date(this._createDate ?? now).toLocaleDateString();
+  }
+
+  get updateDate(): string {
+    const now = new Date().toLocaleDateString();
+    return new Date(this._updateDate ?? now).toLocaleDateString();
+  }
 }
 
 export interface IGetUser {

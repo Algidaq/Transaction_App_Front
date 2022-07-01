@@ -1,6 +1,6 @@
-import { BaseState } from '../../../base/BaseState';
-import { StateEnum } from '../../../enums/StateEnum';
-import { Currency } from '../../../services/currency-service/model/Currency';
+import { BaseState } from '../../../../base/BaseState';
+import { StateEnum } from '../../../../enums/StateEnum';
+import { Currency } from '../../../../services/currency-service/model/Currency';
 
 export class CreateCustomerPageState extends BaseState {
   constructor(

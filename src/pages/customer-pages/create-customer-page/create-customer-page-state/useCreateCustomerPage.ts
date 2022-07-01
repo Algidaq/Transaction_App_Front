@@ -1,15 +1,15 @@
-import { ICurrencyService } from '../../../services/currency-service/CurrencyService';
+import { ICurrencyService } from '../../../../services/currency-service/CurrencyService';
 import { CreateCustomerPageForm } from './CreateCustomerPageForm';
 import { useEffect } from 'react';
 import React from 'react';
 import { CreateCustomerPageState } from './CreateCustomerPageState';
-import { StateEnum } from '../../../enums/StateEnum';
+import { StateEnum } from '../../../../enums/StateEnum';
 import { toast } from 'react-toastify';
-import { getErrorMessage } from '../../../utils/utils';
+import { getErrorMessage } from '../../../../utils/utils';
 import { FormikHelpers, FormikProps } from 'formik';
-import { ICustomerService } from '../../../services/customer-service/CustomerService';
-import { IPostCustomer } from '../../../services/customer-service/model/Customer';
-import { IPostCustomerAccount } from '../../../services/customer-service/model/Account';
+import { ICustomerService } from '../../../../services/customer-service/CustomerService';
+import { IPostCustomer } from '../../../../services/customer-service/model/Customer';
+import { IPostCustomerAccount } from '../../../../services/customer-service/model/Account';
 
 export const useCreateCustomerPage = ({
   currencyService,
