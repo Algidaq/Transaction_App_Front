@@ -1,5 +1,5 @@
-import { BaseState } from '../../../base/BaseState';
-import { StateEnum } from '../../../enums/StateEnum';
+import { BaseState } from '../../../../base/BaseState';
+import { StateEnum } from '../../../../enums/StateEnum';
 export class CreateCurrencyPageState extends BaseState {
   copyWith({
     stateEnum,

@@ -1,12 +1,12 @@
 import React from 'react';
-import Container from '../../components/Container/Container';
+import Container from '../../../components/Container/Container';
 import { useCreateCurrencyPage } from './create-currency-page-state/useCreateCurrencyPage';
 import { useContext } from 'react';
-import { CurrencyServiceContext } from '../../services/currency-service/context/CurrencyServiceContext';
+import { CurrencyServiceContext } from '../../../services/currency-service/context/CurrencyServiceContext';
 import { Form, Formik } from 'formik';
 import { createCurrencyValidateSchema } from './create-currency-page-state/CreateCurrencyPageForm';
-import Input from '../../components/Input/Input';
-import Button from '../../components/Button/Button';
+import Input from '../../../components/Input/Input';
+import Button from '../../../components/Button/Button';
 
 interface CreateCurrencyPageProps {}
 

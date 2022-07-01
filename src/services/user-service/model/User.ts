@@ -1,7 +1,7 @@
 import {
   Role,
   IGetUserRole,
-} from '../../../pages/create-role-page/UserRoleForm';
+} from '../../../pages/role-pages/create-role-page/UserRoleForm';
 export class User {
   private _id?: string;
   private _name?: string;

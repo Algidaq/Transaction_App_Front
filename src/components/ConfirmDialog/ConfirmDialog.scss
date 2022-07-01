@@ -1,0 +1,43 @@
+@import '../../styles/colors';
+.confirm-dialog {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width:400px;
+    height:300px;
+    background: $background-color;
+    border-radius: 16px;
+    transform: translate(-50%, -50%);
+    -webkit-transform: translate(-50%, -50%);
+    -moz-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    -o-transform: translate(-50%, -50%);
+     @media (max-width:400px){
+        width: calc(100% - 64px);
+     }
+     & > header {
+        height:54px;
+        width:100%;
+        border-radius: 16px 16px 0 0;
+        padding:8px 16px;
+        }
+    & > div.content{
+        padding: 8px 16px;
+        width: 100%;
+        height:150px;
+        text-overflow: ellipsis;
+        overflow: hidden;
+         & >p {
+        text-overflow: clip;
+            height:150px;
+         }
+    }
+    & > div.buttons {
+        overflow:hidden;
+        padding: 8px 16px;
+        width:100%;
+        display:flex;
+        align-items: flex-end;
+        justify-content: flex-end;
+    }
+}

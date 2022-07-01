@@ -1,0 +1,29 @@
+@import '../../styles/colors';
+.floating-action-button
+        {
+        height: 48px;
+        width: 48px;
+        outline: none;
+        border: none;
+        background: $primary;
+        position:fixed;
+        bottom:24px;
+        right:24px;
+        display:flex;
+        color:'white';
+        align-items: center;
+        justify-content: center;
+        padding-bottom:4px;
+        border-radius:50%;
+        -o-border-radius:50%;
+        -webkit-border-radius:50%;
+        -moz-border-radius:50%;
+        -ms-border-radius:50%;
+                font-size:24px;
+                color:white;
+                text-align: center;
+        box-shadow: 1px black;
+        &:hover {
+                color:white,
+        }
+}

@@ -2,11 +2,11 @@ import { FunctionComponent, useContext } from 'react';
 import { CreateRolePageProps } from './CreateRoleProps';
 import { useCreateRoleForm } from './UseCreateRoleForm';
 import { Form, Formik } from 'formik';
-import Input from '../../components/Input/Input';
-import Button from '../../components/Button/Button';
+import Input from '../../../components/Input/Input';
+import Button from '../../../components/Button/Button';
 import { roleValidationScheam } from './UserRoleForm';
 import { ToastContainer } from 'react-toastify';
-import { UserRoleServiceContext } from '../../services/user-role-service/UserRoleServiceContext';
+import { UserRoleServiceContext } from '../../../services/user-role-service/UserRoleServiceContext';
 
 const CreateRolePage: FunctionComponent<CreateRolePageProps> = () => {
   const service = useContext(UserRoleServiceContext);

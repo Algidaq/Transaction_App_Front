@@ -19,4 +19,8 @@ export abstract class BaseService {
   post(data: any) {
     return axios.post(this.fullPath, data);
   }
+
+  delete(id: any) {
+    return axios.delete(this.fullPath + `/${id}`);
+  }
 }

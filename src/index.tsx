@@ -5,7 +5,7 @@ import './index.scss';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from 'react-router-dom';
 import App from './App';
-import CreateRolePage from './pages/create-role-page/CreateRolePage';
+import CreateRolePage from './pages/role-pages/create-role-page/CreateRolePage';
 import { UserRoleServiceContext } from './services/user-role-service/UserRoleServiceContext';
 import { UserRoleService } from './services/user-role-service/UserRoleService';
 import CreateUserPage from './pages/create-user-page/CreateUserPage';
@@ -14,22 +14,33 @@ import { UserService } from './services/user-service/UserService';
 import { ToastContainer } from 'react-toastify';
 import { CurrencyServiceContext } from './services/currency-service/context/CurrencyServiceContext';
 import { CurrencyService } from './services/currency-service/CurrencyService';
-import CreateCurrencyPage from './pages/create-currency-page/CreateCurrencyPage';
+import CreateCurrencyPage from './pages/currency-pages/create-currency-page/CreateCurrencyPage';
+import CreateCustomerPage from './pages/create-customer-page/CreateCustomerPage';
+import { CustomerServiceContext } from './services/customer-service/context/CustomerServiceContext';
+import { CustomerService } from './services/customer-service/CustomerService';
+import { CustomerAccountService } from './services/customer-service/CustomerAccountService';
+import CurrencyListPage from './pages/currency-pages/currency-list-page/CurrencyListPage';
+import RoleListPage from './pages/role-pages/role-list-page/RoleListPage';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
+
 root.render(
   <React.StrictMode>
     <BrowserRouter>
-      <CurrencyServiceContext.Provider value={new CurrencyService()}>
-        <UserServiceContext.Provider value={new UserService()}>
-          <UserRoleServiceContext.Provider value={new UserRoleService()}>
-            <CreateCurrencyPage />
-            <ToastContainer />
-          </UserRoleServiceContext.Provider>
-        </UserServiceContext.Provider>
-      </CurrencyServiceContext.Provider>
+      <CustomerServiceContext.Provider
+        value={new CustomerService(new CustomerAccountService())}
+      >
+        <CurrencyServiceContext.Provider value={new CurrencyService()}>
+          <UserServiceContext.Provider value={new UserService()}>
+            <UserRoleServiceContext.Provider value={new UserRoleService()}>
+              <RoleListPage />
+              <ToastContainer />
+            </UserRoleServiceContext.Provider>
+          </UserServiceContext.Provider>
+        </CurrencyServiceContext.Provider>
+      </CustomerServiceContext.Provider>
     </BrowserRouter>
   </React.StrictMode>
 );

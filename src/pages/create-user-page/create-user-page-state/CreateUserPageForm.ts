@@ -1,4 +1,4 @@
-import { Role } from '../../create-role-page/UserRoleForm';
+import { Role } from '../../role-pages/create-role-page/UserRoleForm';
 import * as Yup from 'yup';
 export interface CreateUserPageForm {
   fullName: string;

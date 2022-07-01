@@ -6,7 +6,7 @@ import { toast } from 'react-toastify';
 import { getErrorMessage } from '../../../utils/utils';
 import { CreateUserPageForm } from './CreateUserPageForm';
 import { FormikHelpers } from 'formik';
-import { Role } from '../../create-role-page/UserRoleForm';
+import { Role } from '../../role-pages/create-role-page/UserRoleForm';
 import { IUserService } from '../../../services/user-service/UserService';
 import { IPostUser } from '../../../services/user-service/model/User';
 
@@ -31,6 +31,7 @@ export const useCreateUserPageState = ({
   const componentWillMount = (): void => {
     loadUserRoles();
   };
+  useEffect(componentWillMount, []);
 
   const loadUserRoles = async () => {
     try {
@@ -75,7 +76,6 @@ export const useCreateUserPageState = ({
     }
   };
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(componentWillMount, []);
 
   const handleOnRoleChange = (
     e: React.ChangeEvent<HTMLSelectElement>

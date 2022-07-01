@@ -3,6 +3,7 @@ import * as Yup from 'yup';
 export class Role {
   private _role?: string;
   private _id?: number;
+
   private constructor() {}
   static fromJson(json: IGetUserRole): Role {
     const role = new Role();

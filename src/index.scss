@@ -6,8 +6,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;500;600;700;800;900&display=swap');
 
 // Update Bulma's global variables
-$family-sans-serif: "Cairo", sans-serif;
-$primary: #3F51B5;
+@import './styles/colors';
 
 
 // Import only what you need from Bulma
@@ -25,6 +24,7 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color:$background-color;
 
 }
 
@@ -65,4 +65,17 @@ h6{
 }
 .relative {
   position:relative;
+}
+.flex-center {
+  display:flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.border-top-8{
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+}
+#root,body,html {
+  background-color: $background-color;
 }
