@@ -1,0 +1,98 @@
+@import '../../styles/colors';
+
+.nav {
+    background-color: $background-color;
+    width: 11.25rem;
+    z-index: 40;
+}
+
+.nav>.nav-container {
+    -webkit-overflow-scrolling: touch;
+    --height: 1.25;
+    max-height: 100vh;
+    overflow-y: auto;
+    padding: var(--docs-side-padding);
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
+
+    & .link-group {
+        // & input {
+        //     display: none;
+        // }
+
+        & .link-header {
+            margin-bottom: 4px;
+
+            & a {
+                padding: 4px 8px;
+                border-radius: 8px;
+                -webkit-border-radius: 8px;
+                -moz-border-radius: 8px;
+                -ms-border-radius: 8px;
+                -o-border-radius: 8px;
+                color: black;
+
+                &:hover,
+                &.active {
+                    background-color: white;
+                    color: $primary;
+                }
+            }
+        }
+
+        & ul.link-list {
+            padding: 8px;
+
+            & li.link-item {
+                margin-bottom: 4px;
+
+                & a {
+                    color: #363636;
+                    display: block;
+                    padding: 4px 12px;
+                    border-radius: 8px;
+                    -webkit-border-radius: 8px;
+                    -moz-border-radius: 8px;
+                    -ms-border-radius: 8px;
+                    -o-border-radius: 8px;
+
+                    &:hover,
+                    &.active {
+                        background-color: $primary;
+                        color: white;
+                    }
+                }
+
+
+
+            }
+
+            transition: all 1s ease-in;
+            -webkit-transition: all 1s ease-in;
+            -moz-transition: all 1s ease-in;
+            -ms-transition: all 1s ease-in;
+            -o-transition: all 1s ease-in;
+        }
+    }
+
+}
+
+
+
+@media screen and (max-width: 768px) {
+    .nav {
+        left: -11.25rem;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .nav {
+        background-color: #fff;
+        bottom: 0;
+        position: absolute;
+        top: 0;
+        transition-duration: .2s;
+        transition-property: transform;
+    }
+}

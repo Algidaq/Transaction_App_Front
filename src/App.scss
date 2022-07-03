@@ -1,0 +1,23 @@
+@import './styles/colors';
+.app{
+    --docs-outer: 1.5rem;
+    --docs-inner: 1.5rem;
+    --docs-side-padding: 1rem;
+    background-color: $background-color;
+    position: relative;
+}
+@media screen and (min-width: 769px), print{
+    .app {
+    --docs-outer: 3rem;
+    --docs-inner: 3rem;
+    display: grid;
+    grid-template-columns: 11.25rem 1fr;
+}
+}
+
+@media screen and (max-width: 768px){
+.app {
+    border-top: none;
+    overflow: hidden;
+}
+}

@@ -5,9 +5,11 @@ import { StateEnum } from '../../../../enums/StateEnum';
 import { Role } from '../../create-role-page/UserRoleForm';
 import { toast } from 'react-toastify';
 import { getErrorMessage } from '../../../../utils/utils';
+import { useNavigate } from 'react-router-dom';
 
 export const useRoleListPage = ({ service }: { service: IUserRoleService }) => {
   const [state, setState] = useState(new RoleListPageState(StateEnum.idel));
+  const navigateTo = useNavigate();
   useEffect(() => {
     async function getData() {
       await loadAllRoles();
@@ -72,11 +74,15 @@ export const useRoleListPage = ({ service }: { service: IUserRoleService }) => {
       state.copyWith({ showDialog: false, selectedRole: undefined })
     );
   };
+  const handleOnEmptyClick = () => {
+    navigateTo('/users/roles/add');
+  };
   return {
     state,
     loadAllRoles,
     showConfirmDialog,
     handleOnDeleteConfrim,
     handleOnCancel,
+    handleOnEmptyClick,
   };
 };

@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { IUserRoleService } from '../../../../services/user-role-service/UserRoleService';
 import { StateEnum } from '../../../../enums/StateEnum';
-import { CreateUserPageState } from './UseCreateUserPageState';
+import { CreateUserPageState } from './CreateUserPageState';
 import { toast } from 'react-toastify';
 import { getErrorMessage } from '../../../../utils/utils';
 import { CreateUserPageForm } from './CreateUserPageForm';
-import { FormikHelpers } from 'formik';
+import { FormikHelpers, FormikProps } from 'formik';
 import { Role } from '../../../role-pages/create-role-page/UserRoleForm';
 import { IUserService } from '../../../../services/user-service/UserService';
 import { IPostUser } from '../../../../services/user-service/model/User';
@@ -25,27 +25,34 @@ export const useCreateUserPageState = ({
     role: undefined,
   };
   const [state, setState] = useState<CreateUserPageState>(
-    new CreateUserPageState(StateEnum.idel)
+    new CreateUserPageState(StateEnum.idel, StateEnum.idel)
   );
 
-  const componentWillMount = (): void => {
-    loadUserRoles();
-  };
-  useEffect(componentWillMount, []);
+  useEffect(() => {
+    async function getRoles() {
+      await loadUserRoles();
+    }
+    getRoles();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const loadUserRoles = async () => {
     try {
       setState((state) => state.copyWith({ stateEnum: StateEnum.busy }));
       const roles = await roleService.getAllRoles();
+      const selectedRole = roles.length > 0 ? roles[0] : undefined;
       setState((state) =>
         state.copyWith({
           stateEnum: roles.length > 0 ? StateEnum.success : StateEnum.empty,
           roles: roles,
+          selectedRole: selectedRole,
         })
       );
-    } catch (e) {
+    } catch (e: any) {
       toast.error(getErrorMessage(e));
-      setState((state) => state.copyWith({ stateEnum: StateEnum.error }));
+      setState((state) =>
+        state.copyWith({ stateEnum: StateEnum.error, error: e })
+      );
       console.error(e);
     }
   };
@@ -54,7 +61,7 @@ export const useCreateUserPageState = ({
     helpers: FormikHelpers<CreateUserPageForm>
   ) => {
     try {
-      setState((state) => state.copyWith({ stateEnum: StateEnum.busy }));
+      setState((state) => state.copyWith({ formState: StateEnum.busy }));
 
       const postUser: IPostUser = {
         fullName: values.fullName,
@@ -67,24 +74,32 @@ export const useCreateUserPageState = ({
       toast.success(`User ${user.name} has been created successfully`);
       setTimeout(
         () =>
-          setState((state) => state.copyWith({ stateEnum: StateEnum.success })),
+          setState((state) => state.copyWith({ formState: StateEnum.success })),
         2000
       );
     } catch (e) {
       toast.error(getErrorMessage(e));
-      setState((state) => state.copyWith({ stateEnum: StateEnum.error }));
+      setState((state) => state.copyWith({ formState: StateEnum.error }));
     }
   };
   // eslint-disable-next-line react-hooks/exhaustive-deps
 
   const handleOnRoleChange = (
-    e: React.ChangeEvent<HTMLSelectElement>
-  ): Role | undefined => {
-    const selectedRoleId = Number.parseInt(e.target.value ?? '-1');
+    formik: FormikProps<CreateUserPageForm>,
+    id?: string
+  ) => {
+    const selectedRoleId = Number.parseInt(id ?? '-1');
     const role = state.roles.find((role) => role.id === selectedRoleId);
     if (!role) return;
-    return role;
+    formik.setFieldValue('role', role);
+    setState((state) => state.copyWith({ selectedRole: role }));
   };
 
-  return { state, initialValues, handleFormSubmit, handleOnRoleChange };
+  return {
+    state,
+    initialValues,
+    handleFormSubmit,
+    handleOnRoleChange,
+    loadUserRoles,
+  };
 };

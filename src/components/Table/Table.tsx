@@ -11,14 +11,12 @@ export interface TableProps
 const Table: React.FunctionComponent<TableProps> = ({
   columns,
   rows,
+
   isFullWidth = true,
 }) => {
   const classes = isFullWidth ? 'is-fullwidth' : '';
   return (
-    <div
-      className="table-container is-fullwidth"
-      style={{ borderRadius: '0px 8px' }}
-    >
+    <div className="table-container is-fullwidth">
       <table className={`table is-hoverable ${classes}`}>
         <TableHeader columns={columns} />
         <TableBody columns={columns} rows={rows} />
@@ -52,12 +50,17 @@ interface TableBodyProps {
 
 const TableBody: FunctionComponent<TableBodyProps> = ({ columns, rows }) => {
   const render = (row: any, column: Column<any>) => {
+    const classes = column.cellClassNames?.join(' ') ?? '';
     if (column.isComputed && column.compute) {
-      return <div className="column">{column.compute(row)}</div>;
+      return <div className={`column ${classes}`}>{column.compute(row)}</div>;
     } else if (column.isRenderable && column.render) {
       return column.render(row);
     } else {
-      return <div className="column">{row[column.key] ?? 'Invalid Key'}</div>;
+      return (
+        <div className={`column ${classes}`}>
+          {row[column.key] ?? 'Invalid Key'}
+        </div>
+      );
     }
   };
   return (

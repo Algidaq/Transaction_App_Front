@@ -2,27 +2,34 @@ import { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import Button from '../../../components/Button/Button';
 import ConfirmDailog from '../../../components/ConfirmDialog/ConfirmDialog';
-import FloatingActionButton from '../../../components/FloatingActionButton/FloatingActionButton';
 import Gap from '../../../components/Gap/Gap';
 import StateContainer from '../../../components/StateContainer/StateContainer';
 import { Column } from '../../../components/Table/model/Column';
 import Table from '../../../components/Table/Table';
-import TableTitle from '../../../components/Table/TableTitle';
 import { useUserListPage } from './state/useUserListPage';
 import { UserServiceContext } from '../../../services/user-service/context/UserServiceContext';
 import { User } from '../../../services/user-service/model/User';
+import { pageStyle } from '../../../utils/utils';
+import { UserRoleServiceContext } from '../../../services/user-role-service/UserRoleServiceContext';
+import Select from '../../../components/Select/Select';
+import SearchInput from '../../../components/Search/SearchInput';
+import PageHeader from '../../../components/PageHeader/PageHeader';
 interface UserListPageProps {}
 
 const UserListPage: React.FunctionComponent<UserListPageProps> = () => {
   const service = useContext(UserServiceContext)!;
+  const roleService = useContext(UserRoleServiceContext)!;
   const {
     state,
-    loadAllUsers,
     showConfirmDialog,
     handleOnDeleteConfrim,
     handleOnCancel,
+    handleOnRoleChange,
+    loadAllData,
+    handleOnSearchSubmit,
   } = useUserListPage({
     service,
+    roleService,
   });
   const actionsStyle: React.CSSProperties = {
     display: 'flex',
@@ -69,14 +76,39 @@ const UserListPage: React.FunctionComponent<UserListPageProps> = () => {
     },
   ];
 
+  const renderHeader = (): React.ReactNode => {
+    return (
+      <PageHeader pageTitle="Users List">
+        <div className="is-flex">
+          <Select
+            id="role"
+            name="role"
+            labelText="Filter by role"
+            options={state.roles}
+            value={state.selectedRole?.id}
+            renderContent={(item) => item.role}
+            valueKey={'id'}
+            errors={{}}
+            onChange={(e) => handleOnRoleChange(e.target.value)}
+            style={{ width: '200px' }}
+          />
+          <Gap horizontal={16} />
+          <SearchInput onSubmitSearch={handleOnSearchSubmit} />
+        </div>
+        <Gap vertical={36} />
+      </PageHeader>
+    );
+  };
+
   return (
     <>
-      <StateContainer state={state} onReloadClick={loadAllUsers}>
-        <div className="table-container border-top-8 mt-4">
-          <TableTitle title="User Roles" />
-          <Table columns={columns} rows={state.users} />
-        </div>
-        <FloatingActionButton to="/" />
+      <StateContainer
+        state={state}
+        onReloadClick={loadAllData}
+        style={pageStyle}
+        renderHeader={renderHeader}
+      >
+        <Table columns={columns} rows={state.users} />
       </StateContainer>
       <ConfirmDailog
         showDialog={state.showDialog}

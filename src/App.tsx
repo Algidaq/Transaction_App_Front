@@ -1,67 +1,28 @@
 import * as React from 'react';
-import {
-  Formik,
-  FormikHelpers,
-  FormikProps,
-  Form,
-  Field,
-  FieldProps,
-} from 'formik';
-import Input from './components/Input/Input';
-import * as Yup from 'yup';
-import Container from './components/Container/Container';
-interface MyFormValues {
-  fullName: string;
-}
-const SignupSchema = Yup.object().shape({
-  firstName: Yup.string()
-    .min(2, 'Too Short!')
-    .max(50, 'Too Long!')
-    .required('Required'),
-  lastName: Yup.string()
-    .min(2, 'Too Short!')
-    .max(50, 'Too Long!')
-    .required('Required'),
-  email: Yup.string().email('Invalid email').required('Required'),
-});
-
+import './App.scss';
+import Navbar from './components/Navbar/Navbar';
+import { Route, Routes } from 'react-router-dom';
+import CreateUserPage from './pages/user-pages/create-user-page/CreateUserPage';
+import UsersOutlet from './pages/user-pages/UsersOutlet';
+import UserListPage from './pages/user-pages/user-list-page/UserListPage';
+import RoleListPage from './pages/role-pages/role-list-page/RoleListPage';
+import CreateRolePage from './pages/role-pages/create-role-page/CreateRolePage';
 const App: React.FC<{}> = () => {
-  const initialValues: MyFormValues = { fullName: '' };
   return (
-    <Container className="is-fullheight">
-      <Formik
-        initialValues={initialValues}
-        validationSchema={SignupSchema}
-        onSubmit={(values, actions) => {
-          console.log({ values, actions });
-          alert(JSON.stringify(values, null, 2));
-          actions.setSubmitting(false);
-        }}
-      >
-        {(props) => (
-          <div className="column is-4 is-offset-3">
-            <Form>
-              <Input
-                label="First Name"
-                id="fullName"
-                name="fullName"
-                errors={props.errors}
-                type="text"
-              />
-              <Input
-                label="Phone Number"
-                id="phone"
-                name="phone"
-                errors={props.errors}
-                maxLength={56}
-                type="password"
-                className="my-4"
-              />
-            </Form>
-          </div>
-        )}
-      </Formik>
-    </Container>
+    <div className="app is-fullheight">
+      <Navbar></Navbar>
+      <main className="container m-1">
+        <Routes>
+          <Route path="users" element={<UsersOutlet />}>
+            <Route path="add" element={<CreateUserPage />} />
+            <Route path="roles" element={<RoleListPage />} />
+            <Route path="roles/add" element={<CreateRolePage />} />
+
+            <Route path="" element={<UserListPage />} />
+          </Route>
+        </Routes>
+      </main>
+    </div>
   );
 };
 

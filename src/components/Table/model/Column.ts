@@ -6,4 +6,5 @@ export interface Column<T> {
   isRenderable?: boolean;
   compute?: (value: T) => string;
   render?: (value: T) => React.ReactElement;
+  cellClassNames?: string[];
 }

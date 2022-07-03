@@ -46,7 +46,13 @@ const Input: React.FunctionComponent<InputProps> = ({
       <div className="relative">
         <Field name={name} {...rest} className={classes} type={inputType} />
         {type === 'password' && (
-          <button className="tr-trailing-input" onClick={handleTogglePassword}>
+          <button
+            className="tr-trailing-input"
+            onClick={(e) => {
+              e.preventDefault();
+              handleTogglePassword();
+            }}
+          >
             {hidePassword ? 'Show'.toUpperCase() : 'HIDE'}
           </button>
         )}

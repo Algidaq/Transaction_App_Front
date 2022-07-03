@@ -63,4 +63,5 @@ export class UserService extends BaseService implements IUserService {
 export interface UserQueryParams extends ICommonQueryParams<User> {
   fullname?: string;
   roleId?: string;
+  phone?: string;
 }

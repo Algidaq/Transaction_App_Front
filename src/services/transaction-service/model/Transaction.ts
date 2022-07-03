@@ -5,6 +5,10 @@ import {
 } from '../../customer-service/model/Account';
 import { TransactionType } from '../../../types/TransactionType';
 import { IGetExchangeRate, ExchangeRate } from './ExchangeRate';
+import {
+  GlobalTransferInfo,
+  IGetGlobalTransferInfo,
+} from './GlobalTransactionInfo';
 
 export class Transaction {
   private _id?: string;
@@ -15,6 +19,7 @@ export class Transaction {
   private _amount?: number;
   private _balanceSnapshot?: number;
   private _exchangeRate!: ExchangeRate;
+  private _transactionInfo!: GlobalTransferInfo;
   private _comment?: string;
   private constructor() {}
   static fromJson(json: Partial<IGetTransaction>): Transaction {
@@ -27,6 +32,9 @@ export class Transaction {
     tran._amount = json.amount;
     tran._balanceSnapshot = json.balanceSnapShot;
     tran._exchangeRate = ExchangeRate.fromJson(json.exchangeRate ?? {});
+    tran._transactionInfo = GlobalTransferInfo.fromJson(
+      json.transactionInfo ?? {}
+    );
     tran._comment = json.comment;
     return tran;
   }
@@ -77,6 +85,24 @@ export class Transaction {
   get exchangeRate(): ExchangeRate {
     return this._exchangeRate;
   }
+  get transactionInfo(): GlobalTransferInfo {
+    return this._transactionInfo;
+  }
+
+  get transactionTypeName(): string {
+    switch (this.type) {
+      case 'deposite':
+        return 'Deposite';
+      case 'withdraw':
+        return 'WithDraw';
+      case 'globalTransfer':
+        return 'Global Transfer';
+      case 'localeTransfer':
+        return 'Locale Transfer';
+      default:
+        return 'Unknown';
+    }
+  }
   get comment(): string {
     return this._comment ?? 'N/A';
   }
@@ -91,5 +117,6 @@ export interface IGetTransaction {
   amount: number;
   balanceSnapShot: number;
   exchangeRate: IGetExchangeRate;
+  transactionInfo: IGetGlobalTransferInfo;
   comment: string;
 }

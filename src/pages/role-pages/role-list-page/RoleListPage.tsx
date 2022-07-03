@@ -11,6 +11,8 @@ import FloatingActionButton from '../../../components/FloatingActionButton/Float
 import Gap from '../../../components/Gap/Gap';
 import Button from '../../../components/Button/Button';
 import ConfirmDailog from '../../../components/ConfirmDialog/ConfirmDialog';
+import { pageStyle } from '../../../utils/utils';
+import PageHeader from '../../../components/PageHeader/PageHeader';
 
 interface RoleListPageProps {}
 
@@ -22,6 +24,7 @@ const RoleListPage: React.FunctionComponent<RoleListPageProps> = () => {
     showConfirmDialog,
     handleOnDeleteConfrim,
     handleOnCancel,
+    handleOnEmptyClick,
   } = useRoleListPage({
     service,
   });
@@ -64,12 +67,14 @@ const RoleListPage: React.FunctionComponent<RoleListPageProps> = () => {
 
   return (
     <>
-      <StateContainer state={state} onReloadClick={loadAllRoles}>
-        <div className="table-container border-top-8 mt-4">
-          <TableTitle title="User Roles" />
-          <Table columns={columns} rows={state.roles} />
-        </div>
-        <FloatingActionButton to="/" />
+      <StateContainer
+        state={state}
+        onReloadClick={loadAllRoles}
+        onEmptyClick={handleOnEmptyClick}
+        style={pageStyle}
+        renderHeader={() => <PageHeader pageTitle="User Roles" />}
+      >
+        <Table columns={columns} rows={state.roles} />
       </StateContainer>
       <ConfirmDailog
         showDialog={state.showDialog}

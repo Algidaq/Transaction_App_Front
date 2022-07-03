@@ -1,25 +1,61 @@
 import { FunctionComponent, useContext } from 'react';
 import Container from '../../../components/Container/Container';
-import { useCreateUserPageState } from './create-user-page-state/UseCreateUserPage';
+
 import { UserRoleServiceContext } from '../../../services/user-role-service/UserRoleServiceContext';
 import { Form, Formik } from 'formik';
 import Input from '../../../components/Input/Input';
 import { createUserValidationSchema } from './create-user-page-state/CreateUserPageForm';
 import Button from '../../../components/Button/Button';
 import { UserServiceContext } from '../../../services/user-service/context/UserServiceContext';
+import { useCreateUserPageState } from './create-user-page-state/useCreateUserPage';
+import StateContainer from '../../../components/StateContainer/StateContainer';
+import Divder from '../../../components/Divider/Divider';
+import Gap from '../../../components/Gap/Gap';
+import Select from '../../../components/Select/Select';
 
 interface CreateUserPageProps {}
 
 export const CreateUserPage: FunctionComponent<CreateUserPageProps> = () => {
   const service = useContext(UserRoleServiceContext);
   const userService = useContext(UserServiceContext);
-  const { state, initialValues, handleFormSubmit, handleOnRoleChange } =
-    useCreateUserPageState({
-      roleService: service!,
-      userService: userService!,
-    });
+  const {
+    state,
+    initialValues,
+    handleFormSubmit,
+    handleOnRoleChange,
+    loadUserRoles,
+  } = useCreateUserPageState({
+    roleService: service!,
+    userService: userService!,
+  });
+  const renderOnError = (): React.ReactNode => {
+    return (
+      <div className="is-fullheight is-fullwidth flex-center">
+        <Button text="Reload" onClick={loadUserRoles} />
+      </div>
+    );
+  };
+  const renderHeader = () => {
+    return (
+      <header className="p-3">
+        <Gap vertical={8} />
+        <h6>Add New User</h6>
+        <Gap vertical={16} />
+        <Divder />
+      </header>
+    );
+  };
   return (
-    <Container>
+    <StateContainer
+      state={state}
+      renderOnError={renderOnError}
+      style={{
+        backgroundColor: 'white',
+        margin: '8px 0px',
+        borderRadius: '8px',
+      }}
+      renderHeader={renderHeader}
+    >
       <Formik
         initialValues={initialValues}
         onSubmit={handleFormSubmit}
@@ -33,7 +69,12 @@ export const CreateUserPage: FunctionComponent<CreateUserPageProps> = () => {
         }}
       >
         {(formik) => (
-          <Form className="column is-6">
+          <Form
+            className="column is-6 px-5"
+            onKeyUp={(e) => {
+              if (e.key === 'Enter') e.preventDefault();
+            }}
+          >
             <Input
               id="fullName"
               name="fullName"
@@ -53,36 +94,23 @@ export const CreateUserPage: FunctionComponent<CreateUserPageProps> = () => {
               type="tel"
               className="my-2"
             />
-            <div className="my-2">
-              <label htmlFor="role" className=" label has-text-weight-semibold">
-                Select User Role
-              </label>
+            <Select
+              labelText="Select User Role"
+              id="role"
+              name="role"
+              onChange={(e) => handleOnRoleChange(formik, e.target.value)}
+              onClick={(e) => {
+                if (state.roles.length === 1) {
+                  handleOnRoleChange(formik, e.currentTarget.value);
+                }
+              }}
+              value={state.selectedRole?.id}
+              valueKey={'id'}
+              options={state.roles}
+              errors={formik.errors}
+              renderContent={(role) => role.role}
+            />
 
-              <select
-                id="role"
-                name="role"
-                className="input select is-fullwidth"
-                // value={formik.values.role?.id}
-                onChange={(e) => {
-                  const role = handleOnRoleChange(e);
-                  if (!role) return;
-                  formik.setFieldValue('role', role);
-                }}
-              >
-                {state.roles.map((role) => (
-                  <option value={role.id} key={role.id}>
-                    {role.role}
-                  </option>
-                ))}
-              </select>
-              {formik.errors.role && (
-                <div>
-                  <span className="has-text-danger is-size-7">
-                    {'Role is Required'}
-                  </span>
-                </div>
-              )}
-            </div>
             <Input
               id="password"
               name="password"
@@ -112,7 +140,7 @@ export const CreateUserPage: FunctionComponent<CreateUserPageProps> = () => {
           </Form>
         )}
       </Formik>
-    </Container>
+    </StateContainer>
   );
 };
 

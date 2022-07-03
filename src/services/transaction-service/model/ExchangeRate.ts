@@ -43,7 +43,9 @@ export class ExchangeRate {
   }
 
   get formattedExchangedAmount(): string {
-    return this.exchangedAmount.toLocaleString('en');
+    return (
+      this.exchangedAmount.toLocaleString('en') + ' ' + this.toCurrency.symbol
+    );
   }
 }
 

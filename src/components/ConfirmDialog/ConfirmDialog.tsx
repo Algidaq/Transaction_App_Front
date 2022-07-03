@@ -81,6 +81,7 @@ const BackDrop: React.FunctionComponent<BackDropProps> = ({ onCancel }) => {
     width: '100%',
     height: '100vh',
     backgroundColor: 'rgba(0,0,0,0.3)',
+    zIndex: '100',
   };
   return <div style={style} onClick={onCancel}></div>;
 };
