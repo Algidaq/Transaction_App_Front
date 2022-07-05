@@ -70,9 +70,7 @@ export const useCreateCustomerPage = ({
         postAccount
       );
       setState((state) => state.copyWith({ stateEnum: StateEnum.success }));
-      toast.success(
-        `Customer ${customer.name} with ${account.currency.name} currency was created successfully`
-      );
+      toast.success(`تم اضافة العميل ${customer.name} بنجاح`);
     } catch (e) {
       setState((state) => state.copyWith({ stateEnum: StateEnum.error }));
       toast.error(getErrorMessage(e));

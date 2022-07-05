@@ -3,18 +3,19 @@ import { ICustomerService } from '../../../../services/customer-service/Customer
 import { StateEnum } from '../../../../enums/StateEnum';
 import { GlobalTransferPageState } from './GlobalTransferPageState';
 import { ICurrencyService } from '../../../../services/currency-service/CurrencyService';
+import { useParams } from 'react-router-dom';
 export const useGlobalTransferPage = ({
-  customerId,
   service,
   currencyService,
 }: {
-  customerId: string;
   service: ICustomerService;
   currencyService: ICurrencyService;
 }) => {
   const [state, setState] = useState(
     new GlobalTransferPageState(StateEnum.idel)
   );
+  const params = useParams();
+  const customerId = params.id ?? 'N/A';
 
   useEffect(() => {
     async function getData() {

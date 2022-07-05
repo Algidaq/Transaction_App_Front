@@ -56,7 +56,7 @@ export const useRoleListPage = ({ service }: { service: IUserRoleService }) => {
         })
       );
       const removedRole = await service.deleteRole(role.id);
-      toast.success(`Role ${removedRole.role} delete successfuly`);
+      toast.success(`${removedRole.role} تم حذف `);
     } catch (e) {
       toast.error(getErrorMessage(e));
       console.log(e);

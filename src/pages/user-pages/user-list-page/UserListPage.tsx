@@ -14,6 +14,7 @@ import { UserRoleServiceContext } from '../../../services/user-role-service/User
 import Select from '../../../components/Select/Select';
 import SearchInput from '../../../components/Search/SearchInput';
 import PageHeader from '../../../components/PageHeader/PageHeader';
+import Pagination from '../../../components/Pagination/Pagination';
 interface UserListPageProps {}
 
 const UserListPage: React.FunctionComponent<UserListPageProps> = () => {
@@ -27,6 +28,9 @@ const UserListPage: React.FunctionComponent<UserListPageProps> = () => {
     handleOnRoleChange,
     loadAllData,
     handleOnSearchSubmit,
+    handleNavigationToAddUserPage,
+    handleOnPrePage,
+    handleOnNextPage,
   } = useUserListPage({
     service,
     roleService,
@@ -38,33 +42,32 @@ const UserListPage: React.FunctionComponent<UserListPageProps> = () => {
   };
   const columns: Column<User>[] = [
     {
-      header: 'Index',
+      header: 'فهرس',
       key: 'id',
       isComputed: true,
       compute: (user) => (state.users.indexOf(user) + 1).toString(),
     },
-    { header: 'Name', key: 'name' },
-    { header: 'Phone', key: 'phone' },
+    { header: 'الاسم', key: 'name' },
+    { header: 'رقمم الهاتف', key: 'phone' },
     {
-      header: 'Role',
+      header: 'المسؤلية',
       key: 'role',
       isComputed: true,
-      compute: (user) =>
-        user.role.role !== 'N/A' ? user.role.role : 'User has no roles',
+      compute: (user) => (user.role.role !== 'N/A' ? user.role.role : 'لايوجد'),
     },
     {
-      header: 'Actions',
+      header: 'العمليات',
       key: 'id',
       isRenderable: true,
       render: (value: User) => {
         return (
           <div style={actionsStyle}>
             <Link to="/" className="button is-link is-inverted">
-              Edit
+              تعديل
             </Link>
             <Gap horizontal={16} vertical={0} />
             <Button
-              text="delete"
+              text="حذف"
               textButton
               color="is-danger"
               onClick={(e) => showConfirmDialog(value)}
@@ -78,12 +81,12 @@ const UserListPage: React.FunctionComponent<UserListPageProps> = () => {
 
   const renderHeader = (): React.ReactNode => {
     return (
-      <PageHeader pageTitle="Users List">
+      <PageHeader pageTitle="قائمة المستخدمين">
         <div className="is-flex">
           <Select
             id="role"
             name="role"
-            labelText="Filter by role"
+            labelText="التصفية حسب المسؤلية"
             options={state.roles}
             value={state.selectedRole?.id}
             renderContent={(item) => item.role}
@@ -107,13 +110,21 @@ const UserListPage: React.FunctionComponent<UserListPageProps> = () => {
         onReloadClick={loadAllData}
         style={pageStyle}
         renderHeader={renderHeader}
+        onEmptyClick={handleNavigationToAddUserPage}
       >
         <Table columns={columns} rows={state.users} />
+        <Gap vertical={16} />
+        <Pagination
+          onNext={handleOnNextPage}
+          onPrev={handleOnPrePage}
+          isNextDisabled={state.isNextPageDisabled}
+          isPrevDisabled={state.isPreviousePageDisabled}
+        />
       </StateContainer>
       <ConfirmDailog
         showDialog={state.showDialog}
-        title="Delete"
-        content={`Are you sure you want to delete ${state.selectedUser?.name}?`}
+        title="حذف"
+        content={`هل تريد حذف ${state.selectedUser?.name ?? ''} ?`}
         onConfirm={handleOnDeleteConfrim}
         onCancel={handleOnCancel}
       />

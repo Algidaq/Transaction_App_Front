@@ -1,5 +1,6 @@
 import { Currency } from '../../../../services/currency-service/model/Currency';
 import * as Yup from 'yup';
+import { required, invalid } from '../../../../utils/utils';
 export interface CreateCustomerPageForm {
   fullName: string;
   phone: string;
@@ -7,14 +8,11 @@ export interface CreateCustomerPageForm {
 }
 
 export const createCustomerValidationSchema = Yup.object({
-  fullName: Yup.string()
-    .required('Customer name is required')
-    .min(3, 'Customer name min length is 3')
-    .max(56, 'Customer name max length is 56'),
+  fullName: Yup.string().required(required).min(3, invalid).max(56, invalid),
   phone: Yup.string()
-    .required('Phone number is rquired')
-    .min(10, 'Phone min length is 10')
-    .matches(/[0-9]/, 'Invalid Phone number'),
+    .required(required)
+    .min(10, invalid)
+    .matches(/[0-9]/, invalid),
   currency: Yup.object({
     id: Yup.number().required(),
   }).required(),

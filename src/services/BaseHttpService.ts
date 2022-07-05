@@ -25,13 +25,21 @@ export abstract class BaseService {
     return axios.delete(this.fullPath + `/${id}`);
   }
 
+  put(id: any, body: any) {
+    return axios.put(this.fullPath + `/${id}`, body);
+  }
+
   getPaginationHeader(headers: AxiosResponseHeaders): {
     pages: number;
     count: number;
+    currentPage: number;
+    nextPage: number;
   } {
     return {
       pages: Number.parseInt(headers['total-pages'] ?? '1'),
       count: Number.parseInt(headers['count'] ?? '10'),
+      currentPage: Number.parseInt(headers['current-page'] ?? '1'),
+      nextPage: Number.parseInt(headers['next-page'] ?? '1'),
     };
   }
 }

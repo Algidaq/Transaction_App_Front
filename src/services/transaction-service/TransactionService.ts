@@ -22,6 +22,8 @@ export abstract class ITransactionService {
   abstract getDepositeExchangeRate(
     fromAccount: CustomerAccount
   ): IPostExchangeRate;
+
+  abstract getTransactionById(id: string): Promise<Transaction>;
 }
 
 export class TransactionService
@@ -39,6 +41,7 @@ export class TransactionService
   async getAllTransactions(
     params: TransactionQueryParams
   ): Promise<IGetList<Transaction>> {
+    this.route = '';
     try {
       const { data, headers }: { data: any[]; headers: AxiosResponseHeaders } =
         await this.get(params);
@@ -50,11 +53,22 @@ export class TransactionService
         list,
         pages,
         count,
+        queryParams: { ...this.getPaginationHeader(headers) },
       };
     } catch (e) {
       return Promise.reject(e);
     }
   }
+
+  async getTransactionById(id: string): Promise<Transaction> {
+    try {
+      const { data }: { data: IGetTransaction } = await this.getById(id, {});
+      return Transaction.fromJson(data);
+    } catch (e) {
+      return Promise.reject(e);
+    }
+  }
+
   async handleDeposite(deposite: IPostDeposite): Promise<Transaction> {
     this.route = '/deposite';
     try {

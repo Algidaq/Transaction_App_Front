@@ -4,6 +4,7 @@ import { ICustomerAccountService } from './CustomerAccountService';
 import { IGetList } from '../../types/IGetList';
 import { ICommonQueryParams } from '../../types/query.params';
 import { AxiosResponseHeaders } from 'axios';
+import { EditCustomerForm } from '../../pages/customer-pages/edit-customer-page/state/EditCustomerPageState';
 export abstract class ICustomerService {
   abstract get accountService(): ICustomerAccountService;
   abstract addNewCustomer(customer: IPostCustomer): Promise<Customer>;
@@ -12,6 +13,10 @@ export abstract class ICustomerService {
     params: CustomerQueryParams
   ): Promise<IGetList<Customer>>;
   abstract deleteCustomer(id: string): Promise<Customer>;
+  abstract updateCustomer(
+    id: string,
+    values: EditCustomerForm
+  ): Promise<Customer>;
 }
 export class CustomerService extends BaseService implements ICustomerService {
   constructor(private _accountService: ICustomerAccountService) {
@@ -50,13 +55,26 @@ export class CustomerService extends BaseService implements ICustomerService {
     try {
       const { data, headers }: { data: any[]; headers: AxiosResponseHeaders } =
         await this.get(this.getDefaultParams(params));
-      const list = await data.map<Customer>((customerJson) =>
-        Customer.fromJson(customerJson)
-      );
+      const list = await data
+        .map<Customer>((customerJson) => Customer.fromJson(customerJson))
+        .filter((customer) => !customer.isRemoved);
       return {
         list,
         ...this.getPaginationHeader(headers),
+        queryParams: { ...this.getPaginationHeader(headers) },
       };
+    } catch (e) {
+      return Promise.reject(e);
+    }
+  }
+
+  async updateCustomer(
+    id: string,
+    values: EditCustomerForm
+  ): Promise<Customer> {
+    try {
+      const { data }: { data: IGetCustomer } = await this.put(id, values);
+      return Customer.fromJson(data);
     } catch (e) {
       return Promise.reject(e);
     }

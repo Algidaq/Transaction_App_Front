@@ -7,6 +7,10 @@ import { createCustomerValidationSchema } from './create-customer-page-state/Cre
 import Input from '../../../components/Input/Input';
 import Button from '../../../components/Button/Button';
 import { CustomerServiceContext } from '../../../services/customer-service/context/CustomerServiceContext';
+import { pageStyle } from '../../../utils/utils';
+import PageHeader from '../../../components/PageHeader/PageHeader';
+import Divider from '../../../components/Divider/Divider';
+import Gap from '../../../components/Gap/Gap';
 
 interface CreateCustomerPageProps {}
 
@@ -23,14 +27,17 @@ const CreateCustomerPage: FunctionComponent<CreateCustomerPageProps> = () => {
     customerService,
   });
   return (
-    <Container>
+    <Container className="is-fullheight" style={pageStyle}>
+      <PageHeader pageTitle="إضافة عميل">
+        <Divider />
+      </PageHeader>
       <Formik
         initialValues={initialValues}
         onSubmit={handleOnFormSubmit}
         validationSchema={createCustomerValidationSchema}
         validate={(values) => {
           if (values.currency) return;
-          return { currency: 'Currency is Required' };
+          return { currency: 'اختر العملة' };
         }}
       >
         {(formik) => (
@@ -38,25 +45,28 @@ const CreateCustomerPage: FunctionComponent<CreateCustomerPageProps> = () => {
             <Input
               id="fullName"
               name="fullName"
-              label="Customer Name"
-              placeholder="Enter Customer Name"
+              label="اسم العميل"
+              placeholder="اسم العميل"
               errors={formik.errors}
               maxLength={56}
             />
+            <Gap vertical={16} />
             <Input
               id="phone"
               name="phone"
-              label="Customer Phone"
-              placeholder="Enter Customer Phone"
+              label="رقم هاتف العميل"
+              placeholder="رقم هاتف العميل"
               errors={formik.errors}
               maxLength={56}
               minLength={10}
               className="mt-2"
             />
+            <Gap vertical={16} />
+
             {state.currencies.length > 0 && (
               <div className="mt-2">
                 <label htmlFor="currency" className="label">
-                  Select Customer Currency
+                  اختر العملة
                 </label>
                 <select
                   name="currency"
@@ -74,12 +84,14 @@ const CreateCustomerPage: FunctionComponent<CreateCustomerPageProps> = () => {
                 {formik.errors.currency && (
                   <div className="mt-1">
                     <span className="has-text-danger is-size-7">
-                      Currency is Required
+                      {'اختر العملة'}
                     </span>
                   </div>
                 )}
+                <Gap vertical={32} />
+
                 <Button
-                  text="Create Customer"
+                  text="إضافة"
                   state={state.stateEnum}
                   type="submit"
                   style={{ width: 200, marginTop: 16 }}

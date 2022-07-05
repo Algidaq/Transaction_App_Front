@@ -9,3 +9,10 @@ export const pageStyle: React.CSSProperties = {
   borderRadius: '8px',
   padding: '0px 16px',
 };
+
+export function isNumOnly(value: string): boolean {
+  return /^\d+$/.test(value);
+}
+
+export const required = 'اسم الحقل مطلوب';
+export const invalid = ' الحقل غير صحيح';

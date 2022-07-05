@@ -92,11 +92,11 @@ export class Transaction {
   get transactionTypeName(): string {
     switch (this.type) {
       case 'deposite':
-        return 'Deposite';
+        return 'إيداع';
       case 'withdraw':
-        return 'WithDraw';
+        return 'سحب/خصم';
       case 'globalTransfer':
-        return 'Global Transfer';
+        return 'نحويل';
       case 'localeTransfer':
         return 'Locale Transfer';
       default:

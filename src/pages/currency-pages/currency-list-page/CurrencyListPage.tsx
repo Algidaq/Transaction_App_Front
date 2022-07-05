@@ -7,7 +7,8 @@ import { Column } from '../../../components/Table/model/Column';
 import { Currency } from '../../../services/currency-service/model/Currency';
 import Table from '../../../components/Table/Table';
 import { Link } from 'react-router-dom';
-import TableTitle from '../../../components/Table/TableTitle';
+import { pageStyle } from '../../../utils/utils';
+import PageHeader from '../../../components/PageHeader/PageHeader';
 interface CurrencyListPageProps {}
 
 const CurrencyListPage: React.FunctionComponent<CurrencyListPageProps> = () => {
@@ -16,18 +17,18 @@ const CurrencyListPage: React.FunctionComponent<CurrencyListPageProps> = () => {
   const renderTableActions = (row: Currency): React.ReactElement => {
     return (
       <div className="column">
-        <Link to="/" className="">
+        {/* <Link to="/" className="">
           Edit
-        </Link>
+        </Link> */}
       </div>
     );
   };
   const columns: Column<Currency>[] = [
-    { header: 'ID', key: 'id' },
-    { header: 'Currency name', key: 'name' },
-    { header: 'Currency Symbol', key: 'symbol' },
+    { header: 'فهررس', key: 'id' },
+    { header: 'إسم العملة', key: 'name' },
+    { header: 'رمز العملة', key: 'symbol' },
     {
-      header: 'Actions',
+      header: 'العمليات',
       key: 'id',
       isRenderable: true,
       render: renderTableActions,
@@ -35,11 +36,13 @@ const CurrencyListPage: React.FunctionComponent<CurrencyListPageProps> = () => {
   ];
 
   return (
-    <StateContainer state={state} onReloadClick={loadAllCurrencies}>
-      <div className="table-container" style={{ borderRadius: '8px 0px' }}>
-        <TableTitle title="Currencies" />
-        <Table columns={columns} rows={state.currencies} />
-      </div>
+    <StateContainer
+      state={state}
+      onReloadClick={loadAllCurrencies}
+      style={pageStyle}
+      renderHeader={() => <PageHeader pageTitle="قائمة العملات" />}
+    >
+      <Table columns={columns} rows={state.currencies} />
     </StateContainer>
   );
 };

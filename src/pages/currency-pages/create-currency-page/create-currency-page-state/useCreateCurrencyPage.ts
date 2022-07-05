@@ -29,7 +29,7 @@ export const useCreateCurrencyPage = ({
       const currency = await service.addNewCurrency(postCurrency);
       setState((state) => state.copyWith({ stateEnum: StateEnum.success }));
       helpers.resetForm();
-      toast.success(`Currency ${currency.name} was Created Successfull`);
+      toast.success(`تمت اضافة العملة بنجاح ${currency.name}`);
     } catch (e: any) {
       toast.error(getErrorMessage(e));
       setState((state) =>

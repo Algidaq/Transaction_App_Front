@@ -2,14 +2,14 @@ import { useEffect, useState } from 'react';
 import { UserListPageState } from './UserListPageState';
 import { StateEnum } from '../../../../enums/StateEnum';
 import { toast } from 'react-toastify';
-import { getErrorMessage } from '../../../../utils/utils';
+import { getErrorMessage, isNumOnly } from '../../../../utils/utils';
 import {
   IUserService,
   UserQueryParams,
 } from '../../../../services/user-service/UserService';
 import { User } from '../../../../services/user-service/model/User';
 import { IUserRoleService } from '../../../../services/user-role-service/UserRoleService';
-import { useSearchParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Role } from '../../../role-pages/create-role-page/UserRoleForm';
 
 export const useUserListPage = ({
@@ -20,7 +20,7 @@ export const useUserListPage = ({
   roleService: IUserRoleService;
 }) => {
   const [state, setState] = useState(new UserListPageState(StateEnum.idel));
-
+  const navigateTo = useNavigate();
   useEffect(() => {
     async function getData() {
       await loadAllData();
@@ -32,17 +32,18 @@ export const useUserListPage = ({
   async function loadAllData() {
     try {
       setState((state) => state.copyWith({ stateEnum: StateEnum.busy }));
-      const [{ list: users }, roles] = await Promise.all([
+      const [{ list: users, queryParams }, roles] = await Promise.all([
         service.getAllUsers({}),
         roleService.getAllRoles(),
       ]);
-      const allRole = Role.fromJson({ id: -1, role: 'all' });
+      const allRole = Role.fromJson({ id: -1, role: 'الكل' });
       setState((state) =>
         state.copyWith({
           stateEnum: users.length > 0 ? StateEnum.success : StateEnum.empty,
           users: users,
           roles: [allRole, ...roles],
           selectedRole: allRole,
+          queryParams: { ...state.queryParams, ...queryParams },
         })
       );
     } catch (e: any) {
@@ -54,12 +55,21 @@ export const useUserListPage = ({
 
   const loadAllUsers = async (params: UserQueryParams = {}) => {
     try {
-      setState((state) => state.copyWith({ stateEnum: StateEnum.busy }));
-      const { list: users } = await service.getAllUsers({ ...params });
+      console.log(params);
+      setState((state) =>
+        state.copyWith({
+          stateEnum: StateEnum.busy,
+        })
+      );
+      const { list: users, queryParams } = await service.getAllUsers({
+        ...params,
+      });
+      console.log(queryParams);
       setState((state) =>
         state.copyWith({
           stateEnum: users.length > 0 ? StateEnum.success : StateEnum.empty,
           users: users,
+          queryParams: { ...params, ...queryParams },
         })
       );
     } catch (e: any) {
@@ -68,11 +78,13 @@ export const useUserListPage = ({
       );
     }
   };
+
   const showConfirmDialog = (user: User) => {
     setState((state) =>
       state.copyWith({ showDialog: true, selectedUser: user })
     );
   };
+
   const handleOnDeleteConfrim = async () => {
     const oldUsers = [...state.users];
     const user = oldUsers.find(
@@ -89,7 +101,7 @@ export const useUserListPage = ({
         })
       );
       const removedUser = await service.deleteUser(user.id);
-      toast.success(`User ${removedUser.name} delete successfuly`);
+      toast.success(`تم حذف المستخدم ${removedUser.name}`);
     } catch (e) {
       toast.error(getErrorMessage(e));
       console.log(e);
@@ -113,16 +125,37 @@ export const useUserListPage = ({
     const role = state.roles.find((element) => element.id === roleId);
     if (!role) return;
     setState((state) => state.copyWith({ selectedRole: role }));
-    await loadAllUsers({ roleId: id === '-1' ? undefined : id });
+    await loadAllUsers({
+      ...state.queryParams,
+      roleId: id === '-1' ? undefined : id,
+    });
   };
 
-  const handleOnSearchSubmit = (search: string) => {
+  const handleOnSearchSubmit = async (search: string) => {
     const roleId =
       state.selectedRole?.id === -1 ? undefined : state.selectedRole?.id;
-    loadAllUsers({
+    await loadAllUsers({
+      ...state.queryParams,
+
       roleId: roleId?.toString(),
-      fullname: search,
-      phone: search,
+      fullname: !isNumOnly(search) ? search : undefined,
+      phone: isNumOnly(search) ? search : undefined,
+    });
+  };
+  const handleNavigationToAddUserPage = () => {
+    navigateTo('/users/add');
+  };
+
+  const handleOnNextPage = async () => {
+    await loadAllUsers({
+      ...state.queryParams,
+      page: state.queryParams.nextPage,
+    });
+  };
+  const handleOnPrePage = async () => {
+    await loadAllUsers({
+      ...state.queryParams,
+      page: (state.queryParams.currentPage ?? 2) - 1,
     });
   };
   return {
@@ -134,5 +167,8 @@ export const useUserListPage = ({
     handleOnRoleChange,
     loadAllData,
     handleOnSearchSubmit,
+    handleNavigationToAddUserPage,
+    handleOnNextPage,
+    handleOnPrePage,
   };
 };

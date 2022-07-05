@@ -11,7 +11,7 @@ const SearchInput: React.FunctionComponent<SearchInputProps> = ({
   return (
     <div>
       <label htmlFor="search" className="label has-text-weight-semibold">
-        Filter by search
+        تصفية حسب البحث
       </label>
       <div className="field has-addons">
         <div className="control">
@@ -20,8 +20,13 @@ const SearchInput: React.FunctionComponent<SearchInputProps> = ({
             className="input"
             type="text"
             value={search}
-            placeholder="Find a repository"
-            onChange={(e) => setSearch(e.target.value)}
+            // placeholder="Find a repository"
+            onChange={(e) => {
+              setSearch(e.target.value);
+              if (e.target.value === '') {
+                onSubmitSearch('');
+              }
+            }}
             onKeyUp={(e) => {
               if (e.key !== 'Enter') return;
               if (search.trim() === '') return;
@@ -37,7 +42,7 @@ const SearchInput: React.FunctionComponent<SearchInputProps> = ({
             onClick={(e) => onSubmitSearch(search)}
             disabled={search.trim() === ''}
           >
-            Search
+            بحث
           </button>
         </div>
       </div>

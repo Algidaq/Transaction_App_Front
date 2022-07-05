@@ -1,5 +1,6 @@
 import { Role } from '../../../role-pages/create-role-page/UserRoleForm';
 import * as Yup from 'yup';
+import { required, invalid } from '../../../../utils/utils';
 export interface CreateUserPageForm {
   fullName: string;
   phone: string;
@@ -9,23 +10,17 @@ export interface CreateUserPageForm {
 }
 
 export const createUserValidationSchema = Yup.object({
-  fullName: Yup.string()
-    .required('Full name is required')
-    .min(3, 'Full name min length is 3')
-    .max(56, 'FullName max length is 56'),
+  fullName: Yup.string().required(required).min(3, invalid).max(56, invalid),
   phone: Yup.string()
-    .required('Phone number is Required')
-    .min(10, 'Min length is 10')
-    .max(56, 'Max length is 56')
-    .matches(RegExp(/[0-9]/), 'Invalid Phone number'),
-  password: Yup.string()
-    .required('Password is required')
-    .min(4, 'Password min length is 3')
-    .max(56, 'Password max length is 56'),
+    .required(required)
+    .min(10, invalid)
+    .max(56, invalid)
+    .matches(RegExp(/[0-9]/), invalid),
+  password: Yup.string().required(required).min(4, invalid).max(56, invalid),
   confirmPassword: Yup.string()
-    .required('Password is required')
-    .min(4, 'Password min length is 3')
-    .max(56, 'Password max length is 56'),
+    .required(required)
+    .min(4, invalid)
+    .max(56, invalid),
   role: Yup.object({
     id: Yup.number().required(),
     role: Yup.string().required(),

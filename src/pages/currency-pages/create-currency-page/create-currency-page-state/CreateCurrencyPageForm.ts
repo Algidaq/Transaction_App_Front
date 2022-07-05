@@ -1,15 +1,11 @@
 import * as Yup from 'yup';
+import { required, invalid } from '../../../../utils/utils';
 export interface CreateCurrencyPageForm {
   name: string;
   symbol: string;
 }
 
 export const createCurrencyValidateSchema = Yup.object({
-  name: Yup.string()
-    .required('Currency name is required')
-    .min(3, 'Currency min length is 3')
-    .max(56, 'Currency name max length is 56'),
-  symbol: Yup.string()
-    .required('Currency Symbol is required')
-    .min(1, 'Currency Symbol min length is 1'),
+  name: Yup.string().required(required).min(3, invalid).max(56, invalid),
+  symbol: Yup.string().required(required).min(1, invalid),
 });

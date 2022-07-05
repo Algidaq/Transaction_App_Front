@@ -34,14 +34,14 @@ const DepositeForm: React.FunctionComponent<DepositeFormProps> = ({
         validationSchema={validateDepositeSchema}
         validate={(values) => {
           if (values.fromAccount) return;
-          return { fromAccount: 'From Account is required' };
+          return { fromAccount: 'اختر الحساب' };
         }}
       >
         {(formik) => (
           <Form className="column is-6">
             <div className="is-fullwidth ">
               <label htmlFor="balance" className=" has-text-weight-semibold">
-                Account Balance
+                رصيد الحساب
               </label>
               <div className="input">
                 {state.selectedFromAccount.fromAccount?.formattedBalance}
@@ -53,7 +53,7 @@ const DepositeForm: React.FunctionComponent<DepositeFormProps> = ({
                 htmlFor="fromAccount"
                 className="label has-text-weight-semibold"
               >
-                Select Account
+                من/الى حساب
               </label>
               <select
                 value={formik.values.fromAccount?.id}
@@ -67,7 +67,7 @@ const DepositeForm: React.FunctionComponent<DepositeFormProps> = ({
                     <option
                       key={index}
                       value={account.id}
-                    >{`Account ${account.currency.name}`}</option>
+                    >{`حساب ${account.currency.name} `}</option>
                   );
                 })}
               </select>
@@ -84,8 +84,8 @@ const DepositeForm: React.FunctionComponent<DepositeFormProps> = ({
             <Input
               id="amount"
               name="amount"
-              label="Amount"
-              placeholder={`Enter ${state.title} Amount`}
+              label="المبلغ"
+              // placeholder={`Enter ${state.title} Amount`}
               maxLength={56}
               minLength={1}
               inputMode="numeric"
@@ -95,7 +95,7 @@ const DepositeForm: React.FunctionComponent<DepositeFormProps> = ({
             <Input
               id="comment"
               name="comment"
-              label="Comment"
+              label="التعليق"
               placeholder="Enter Comment"
               maxLength={256}
               minLength={1}
@@ -105,7 +105,7 @@ const DepositeForm: React.FunctionComponent<DepositeFormProps> = ({
             />
             <Gap vertical={32} />
             <Button
-              text="Deposite"
+              text={transactionType === 'deposite' ? 'إيداع' : 'سحب'}
               state={state.state.stateEnum}
               type="submit"
               disabled={!(formik.isValid && formik.dirty)}

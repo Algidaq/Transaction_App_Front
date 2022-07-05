@@ -2,15 +2,17 @@ import { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import Button from '../../../components/Button/Button';
 import ConfirmDailog from '../../../components/ConfirmDialog/ConfirmDialog';
-import FloatingActionButton from '../../../components/FloatingActionButton/FloatingActionButton';
 import Gap from '../../../components/Gap/Gap';
 import StateContainer from '../../../components/StateContainer/StateContainer';
 import { Column } from '../../../components/Table/model/Column';
 import Table from '../../../components/Table/Table';
-import TableTitle from '../../../components/Table/TableTitle';
 import { CustomerServiceContext } from '../../../services/customer-service/context/CustomerServiceContext';
 import { useCustomerListPage } from './state/useCustomerListPage';
 import { Customer } from '../../../services/customer-service/model/Customer';
+import { pageStyle } from '../../../utils/utils';
+import PageHeader from '../../../components/PageHeader/PageHeader';
+import SearchInput from '../../../components/Search/SearchInput';
+import Pagination from '../../../components/Pagination/Pagination';
 interface UserListPageProps {}
 
 const CustomerListPage: React.FunctionComponent<UserListPageProps> = () => {
@@ -21,6 +23,9 @@ const CustomerListPage: React.FunctionComponent<UserListPageProps> = () => {
     showConfirmDialog,
     handleOnDeleteConfrim,
     handleOnCancel,
+    handleOnSearchSubmit,
+    handleOnNextClick,
+    handleOnPrevClick,
   } = useCustomerListPage({
     service,
   });
@@ -28,26 +33,67 @@ const CustomerListPage: React.FunctionComponent<UserListPageProps> = () => {
     display: 'flex',
     justifyContent: 'flex-start',
     alignItems: 'flex-start',
+    flexWrap: 'wrap',
   };
   const renderCustomerActions = (value: Customer) => {
     return (
       <div style={actionsStyle}>
-        <Link to="/" className="button is-link is-inverted">
-          Edit
+        <Link
+          to={{
+            pathname: `/customers/${value.id}/edit`,
+          }}
+          className="button is-link is-inverted  mt-2"
+        >
+          تعديل
         </Link>
-        <Gap horizontal={16} vertical={0} />
+        <Gap horizontal={8} vertical={0} />
 
-        <Link to="/" className="button is-link is-inverted">
-          Add Accounts
+        <Link
+          to={{
+            pathname: `/customers/${value.id}/accounts/add`,
+          }}
+          className="button is-link is-inverted  mt-2"
+        >
+           إضافة حساب
         </Link>
-        <Gap horizontal={16} vertical={0} />
+        <Gap horizontal={8} vertical={0} />
         <Button
-          text="delete"
+          text="حذف"
           textButton
           color="is-danger"
           onClick={(e) => showConfirmDialog(value)}
-          className="is-6"
+          className="is-6 mt-2"
         />
+      </div>
+    );
+  };
+
+  const renderCustomerTransferAction = (value: Customer) => {
+    if (value.accounts.length <= 0) return <div></div>;
+    return (
+      <div style={actionsStyle}>
+        <Link
+          to={`/transfer/deposite/${value.id}`}
+          className="button is-link is-inverted  mt-2"
+        >
+          إيداع
+        </Link>
+        <Gap horizontal={8} vertical={0} />
+
+        <Link
+          to={`/transfer/withdraw/${value.id}`}
+          className="button is-link is-inverted  mt-2"
+        >
+          سحب/خصم
+        </Link>
+        <Gap horizontal={8} vertical={0} />
+        <Link
+          to={`/transfer/global-transfer/${value.id}`}
+          className="button is-link is-inverted mt-2"
+        >
+          تحويل
+        </Link>
+        <Gap horizontal={8} vertical={0} />
       </div>
     );
   };
@@ -73,40 +119,72 @@ const CustomerListPage: React.FunctionComponent<UserListPageProps> = () => {
   };
   const columns: Column<Customer>[] = [
     {
-      header: 'Index',
+      header: 'فهرس',
       key: 'id',
       isComputed: true,
       compute: (customer) => (state.customers.indexOf(customer) + 1).toString(),
     },
-    { header: 'Name', key: 'name' },
-    { header: 'Phone', key: 'phone' },
+    { header: 'اسم العميل', key: 'name' },
+    { header: 'رقم الهاتف', key: 'phone' },
     {
-      header: 'Accounts',
+      header: 'حسابات العميل',
       key: 'id',
       isRenderable: true,
       render: renderCustomerAccounts,
     },
     {
-      header: 'Actions',
+      header: 'تحويل',
+      key: 'id',
+      isRenderable: true,
+      render: renderCustomerTransferAction,
+    },
+    {
+      header: 'العمليات',
       key: 'id',
       isRenderable: true,
       render: renderCustomerActions,
     },
   ];
+  const renderHeader = () => {
+    return (
+      <PageHeader pageTitle="قائمة العملاء">
+        <div className="is-flex">
+          <SearchInput onSubmitSearch={handleOnSearchSubmit} />
+        </div>
+        <Gap horizontal={16} />
+
+        <div style={{ position: 'fixed', right: '56px', top: '16px' }}>
+          <Button
+            textButton
+            text="Referesh"
+            onClick={(e) => loadAllCustomers()}
+          />
+        </div>
+      </PageHeader>
+    );
+  };
 
   return (
     <>
-      <StateContainer state={state} onReloadClick={loadAllCustomers}>
-        <div className="table-container border-top-8 mt-4">
-          <TableTitle title="Customers" />
-          <Table columns={columns} rows={state.customers} />
-        </div>
-        <FloatingActionButton to="/" />
+      <StateContainer
+        state={state}
+        onReloadClick={(e) => loadAllCustomers()}
+        style={pageStyle}
+        className="is-fullheight"
+        renderHeader={renderHeader}
+      >
+        <Table columns={columns} rows={state.customers} />
+        <Pagination
+          onNext={handleOnNextClick}
+          onPrev={handleOnPrevClick}
+          isNextDisabled={state.isNextDisabled}
+          isPrevDisabled={state.isPrevDisabled}
+        />
       </StateContainer>
       <ConfirmDailog
         showDialog={state.showDialog}
-        title="Delete"
-        content={`Are you sure you want to delete ${state.selectedCustomer?.name}?`}
+        title="حذف"
+        content={`هل تريدد حذف العميل ${state.selectedCustomer?.name ?? ''} ?`}
         onConfirm={handleOnDeleteConfrim}
         onCancel={handleOnCancel}
       />

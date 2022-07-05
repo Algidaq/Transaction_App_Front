@@ -53,7 +53,7 @@ const Input: React.FunctionComponent<InputProps> = ({
               handleTogglePassword();
             }}
           >
-            {hidePassword ? 'Show'.toUpperCase() : 'HIDE'}
+            {hidePassword ? 'إظهار'.toUpperCase() : 'إخفاء'}
           </button>
         )}
       </div>

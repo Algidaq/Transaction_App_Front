@@ -3,7 +3,10 @@ import { CustomerListPageState } from './CustomerListPageState';
 import { StateEnum } from '../../../../enums/StateEnum';
 import { toast } from 'react-toastify';
 import { getErrorMessage } from '../../../../utils/utils';
-import { ICustomerService } from '../../../../services/customer-service/CustomerService';
+import {
+  ICustomerService,
+  CustomerQueryParams,
+} from '../../../../services/customer-service/CustomerService';
 import { Customer } from '../../../../services/customer-service/model/Customer';
 
 export const useCustomerListPage = ({
@@ -20,14 +23,17 @@ export const useCustomerListPage = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const loadAllCustomers = async () => {
+  const loadAllCustomers = async (params: CustomerQueryParams = {}) => {
     try {
       setState((state) => state.copyWith({ stateEnum: StateEnum.busy }));
-      const { list: customers } = await service.getAllCustomers({});
+      const { list: customers, queryParams } = await service.getAllCustomers(
+        params
+      );
       setState((state) =>
         state.copyWith({
           stateEnum: customers.length > 0 ? StateEnum.success : StateEnum.empty,
           customers: customers,
+          queryParams: { ...params, ...queryParams },
         })
       );
     } catch (e: any) {
@@ -36,11 +42,13 @@ export const useCustomerListPage = ({
       );
     }
   };
+  /// show delete confirmation dialog
   const showConfirmDialog = (user: Customer) => {
     setState((state) =>
       state.copyWith({ showDialog: true, selectedCustomer: user })
     );
   };
+  ///handle delete
   const handleOnDeleteConfrim = async () => {
     const oldCustomers = [...state.customers];
     const customer = oldCustomers.find(
@@ -60,7 +68,7 @@ export const useCustomerListPage = ({
         })
       );
       const removedCustomer = await service.deleteCustomer(customer.id);
-      toast.success(`Customer ${removedCustomer.name} delete successfuly`);
+      toast.success(`تم حذف العميل ${removedCustomer.name}`);
     } catch (e) {
       toast.error(getErrorMessage(e));
       console.log(e);
@@ -78,11 +86,38 @@ export const useCustomerListPage = ({
       state.copyWith({ showDialog: false, selectedCustomer: undefined })
     );
   };
+
+  const handleOnSearchSubmit = async (search: string) => {
+    const isnum = /^\d+$/.test(search);
+    await loadAllCustomers({
+      ...state.queryParams,
+      fullname: !isnum ? search : undefined,
+      phone: isnum ? search : undefined,
+      page: 1,
+    });
+  };
+  const handleOnPrevClick = async () => {
+    await loadAllCustomers({
+      ...state.queryParams,
+      page: (state.queryParams.currentPage ?? 2) - 1,
+    });
+  };
+
+  const handleOnNextClick = async () => {
+    await loadAllCustomers({
+      ...state.queryParams,
+      page: state.queryParams.nextPage,
+    });
+  };
+
   return {
     state,
     loadAllCustomers,
     showConfirmDialog,
     handleOnDeleteConfrim,
     handleOnCancel,
+    handleOnSearchSubmit,
+    handleOnNextClick,
+    handleOnPrevClick,
   };
 };

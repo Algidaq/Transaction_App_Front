@@ -38,7 +38,7 @@ export interface CreateUserRoleForm {
 
 export const roleValidationScheam = Yup.object().shape({
   role: Yup.string()
-    .required('role is required')
-    .min(3, 'role min length is 3')
-    .max(56, 'role max length is 3'),
+    .required('اسم الحقل مطلوب')
+    .min(3, ' اسم الحقل غير صحيح')
+    .max(56, 'سم الحقل غير صحيح'),
 });

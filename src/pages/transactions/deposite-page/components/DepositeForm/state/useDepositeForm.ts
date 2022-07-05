@@ -10,7 +10,11 @@ import { useState } from 'react';
 import { DepositeFormState } from './DepositeFormState';
 import { StateEnum } from '../../../../../../enums/StateEnum';
 import { toast } from 'react-toastify';
-import { getErrorMessage } from '../../../../../../utils/utils';
+import {
+  getErrorMessage,
+  required,
+  invalid,
+} from '../../../../../../utils/utils';
 import { TransactionType } from '../../../../../../types/TransactionType';
 import { Transaction } from '../../../../../../services/transaction-service/model/Transaction';
 export const useDepositeForm = ({
@@ -22,8 +26,8 @@ export const useDepositeForm = ({
   customer: Customer;
   transactionType: TransactionType;
 }) => {
-  let title = transactionType === 'deposite' && 'Deposite';
-  title = transactionType === 'withdraw' && 'WithDraw';
+  let title = transactionType === 'deposite' && 'إإيداع';
+  title = transactionType === 'withdraw' && 'سحب/خصم';
   // handle form state
   const [state, setState] = useState(
     new DepositeFormState(StateEnum.idel, customer)
@@ -71,9 +75,7 @@ export const useDepositeForm = ({
     try {
       let transaction: Transaction = await service.handleDeposite(deposite);
       setState((state) => state.copyWith({ stateEnum: StateEnum.success }));
-      toast.success(
-        `${deposite.amount.toLocaleString()} was ${title} successfuly from Customer Account`
-      );
+      toast.success(`تمت العملية بنجاح`);
       setSelectedFromAccount({ fromAccount: transaction.fromAccount });
     } catch (e) {
       return Promise.reject(e);
@@ -84,9 +86,8 @@ export const useDepositeForm = ({
     try {
       let transaction: Transaction = await service.handleWithdraw(deposite);
       setState((state) => state.copyWith({ stateEnum: StateEnum.success }));
-      toast.success(
-        `${deposite.amount.toLocaleString()} was ${title} successfuly from Customer Account`
-      );
+      toast.success(`تمت العملية بنجاح`);
+
       setSelectedFromAccount({ fromAccount: transaction.fromAccount });
     } catch (e) {
       return Promise.reject(e);
@@ -120,8 +121,6 @@ export interface IDepositeForm {
 
 export const validateDepositeSchema = Yup.object({
   fromAccount: Yup.object({ id: Yup.string().required() }),
-  amount: Yup.number()
-    .required('Amount is required')
-    .moreThan(0, 'Can not be less than 0'),
+  amount: Yup.number().required(required).moreThan(0, invalid),
   comment: Yup.string(),
 });

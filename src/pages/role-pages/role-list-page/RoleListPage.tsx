@@ -4,10 +4,8 @@ import { Role } from '../create-role-page/UserRoleForm';
 import { useRoleListPage } from './state/useRoleListPage';
 import { useContext } from 'react';
 import { UserRoleServiceContext } from '../../../services/user-role-service/UserRoleServiceContext';
-import TableTitle from '../../../components/Table/TableTitle';
 import Table from '../../../components/Table/Table';
 import StateContainer from '../../../components/StateContainer/StateContainer';
-import FloatingActionButton from '../../../components/FloatingActionButton/FloatingActionButton';
 import Gap from '../../../components/Gap/Gap';
 import Button from '../../../components/Button/Button';
 import ConfirmDailog from '../../../components/ConfirmDialog/ConfirmDialog';
@@ -34,15 +32,15 @@ const RoleListPage: React.FunctionComponent<RoleListPageProps> = () => {
     alignItems: 'flex-start',
   };
   const columns: Column<Role>[] = [
-    { header: 'ID', key: 'id' },
+    { header: 'فهرس', key: 'id' },
     {
-      header: 'Role Name',
+      header: 'الاسم',
       key: 'role',
       isComputed: true,
       compute: (value) => value.role.toUpperCase(),
     },
     {
-      header: 'Actions',
+      header: 'أجراءات',
       key: 'id',
       isRenderable: true,
       render: (value: Role) => {
@@ -53,7 +51,7 @@ const RoleListPage: React.FunctionComponent<RoleListPageProps> = () => {
             </Link> */}
             <Gap horizontal={16} vertical={0} />
             <Button
-              text="delete"
+              text="حذف"
               textButton
               color="is-danger"
               onClick={(e) => showConfirmDialog(value)}
@@ -72,14 +70,14 @@ const RoleListPage: React.FunctionComponent<RoleListPageProps> = () => {
         onReloadClick={loadAllRoles}
         onEmptyClick={handleOnEmptyClick}
         style={pageStyle}
-        renderHeader={() => <PageHeader pageTitle="User Roles" />}
+        renderHeader={() => <PageHeader pageTitle="مسؤليات المستخدمين" />}
       >
         <Table columns={columns} rows={state.roles} />
       </StateContainer>
       <ConfirmDailog
         showDialog={state.showDialog}
-        title="Delete"
-        content={`Are you sure you want to delete ${state.selectedRole?.role}?`}
+        title="حذف"
+        content={` هل تريد حذف ${state.selectedRole?.role} ? `}
         onConfirm={handleOnDeleteConfrim}
         onCancel={handleOnCancel}
       />

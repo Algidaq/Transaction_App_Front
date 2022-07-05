@@ -6,7 +6,11 @@ export class TransactionListPageState extends BaseState {
   constructor(
     stateEnum: StateEnum,
     public readonly transactions: Transaction[] = [],
-    public readonly queryParams: TransactionQueryParams = {},
+    public readonly queryParams: TransactionQueryParams = {
+      page: 1,
+      limit: 10,
+      currentPage: 1,
+    },
     public readonly selectedTransactionType: { id: number; name: string } = {
       id: -1,
       name: 'all',
@@ -14,6 +18,12 @@ export class TransactionListPageState extends BaseState {
     error?: Object
   ) {
     super(stateEnum, error);
+  }
+  get isNextDisabled(): boolean {
+    return this.queryParams.currentPage === this.queryParams.nextPage;
+  }
+  get isPrevDisabled(): boolean {
+    return this.queryParams.currentPage === 1;
   }
   copyWith({
     stateEnum,

@@ -2,13 +2,35 @@ import { INavbarItem } from '../components/Navbar/model/INavbarItem';
 
 export const routes: INavbarItem[] = [
   {
-    groupName: 'User Management',
+    groupName: ' ادارة المستخدمين',
     groupPath: '/users',
     navLinks: [
-      { navName: 'User list', navPath: '?role=-1' },
-      { navName: 'Add User', navPath: '/add' },
-      { navName: 'User Roles', navPath: '/roles' },
-      { navName: 'Add Roles', navPath: '/roles/add' },
+      { navName: 'المستخدمبن', navPath: '?role=-1' },
+      { navName: 'إضافة مستخدم', navPath: '/add' },
+      { navName: 'مسؤوليات المستخدمين', navPath: '/roles' },
+      { navName: 'أضافة مسؤولية', navPath: '/roles/add' },
     ],
+  },
+  {
+    groupName: 'العملات',
+    groupPath: '/currencies',
+    navLinks: [
+      { navName: 'أضافة عملة', navPath: '/add' },
+      { navName: 'قائمة العملات', navPath: '' },
+    ],
+  },
+  {
+    groupName: 'العملاء',
+    groupPath: '/customers',
+    navLinks: [
+      { navName: 'أضافة عميل', navPath: '/add' },
+      { navName: 'قائمة العملاء', navPath: '' },
+    ],
+  },
+
+  {
+    groupName: 'المعاملات',
+    groupPath: '/transactions',
+    navLinks: [{ navName: 'قائمة المعاملات', navPath: '/' }],
   },
 ];

@@ -10,7 +10,7 @@ import { StateEnum } from '../../../../enums/StateEnum';
 import { IDepositeForm } from '../../deposite-page/components/DepositeForm/state/useDepositeForm';
 import { FormikHelpers, FormikProps } from 'formik';
 import * as Yup from 'yup';
-import { getErrorMessage } from '../../../../utils/utils';
+import { getErrorMessage, invalid, required } from '../../../../utils/utils';
 import { toast } from 'react-toastify';
 export const useGlobalTransferForm = ({
   customer,
@@ -52,7 +52,7 @@ export const useGlobalTransferForm = ({
           fromAccount: transaction.fromAccount,
         })
       );
-      toast.success('Transaction Completed Successfully');
+      toast.success('تمت العملية بنجاح');
       console.log(transaction);
     } catch (e: any) {
       toast.error(getErrorMessage(e));
@@ -181,22 +181,13 @@ export interface IGlobalTransferFrom extends IDepositeForm {
 
 export const globalTransferValidationSchema = Yup.object({
   fromAccount: Yup.object({ id: Yup.string().required() }).required(
-    'Select From Account'
+    'اختار الحساب المرسل منه'
   ),
-  amount: Yup.number()
-    .required('Amount is required')
-    .moreThan(0, 'Can not be less than 0'),
+  amount: Yup.number().required(required).moreThan(0, invalid),
   comment: Yup.string(),
   toCurrency: Yup.object({ id: Yup.number().required() }).required(),
   rate: Yup.string().matches(/[0-9./]/),
-  fullName: Yup.string()
-    .required('To Customer Name is required')
-    .min(3, 'To Customer Name min length is 3')
-    .max(56, 'To Customer Name max length is 56'),
-  phone: Yup.string()
-    .matches(/[0-9]/, 'Invalid From Account')
-    .min(9, 'Phone number min length is 9'),
-  bankAccount: Yup.string()
-    .matches(/[0-9]/, 'Invalid From Account')
-    .min(5, 'Phone number min length is 9'),
+  fullName: Yup.string().required(required).min(3, invalid).max(56, invalid),
+  phone: Yup.string().matches(/[0-9]/, 'Invalid From Account').min(9, invalid),
+  bankAccount: Yup.string().matches(/[0-9]/, invalid).min(5, invalid),
 });

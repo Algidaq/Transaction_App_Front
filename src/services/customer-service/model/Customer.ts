@@ -6,12 +6,14 @@ export class Customer {
   private _phone?: string;
   private _accounts!: CustomerAccount[];
   private _updateDate?: string;
+  private _isRemoved?: boolean;
   private constructor() {}
   static fromJson(json: Partial<IGetCustomer>): Customer {
     const customer = new Customer();
     customer._id = json.id;
     customer._name = json.fullName;
     customer._phone = json.phone;
+    customer._isRemoved = json.isRemoved;
     customer._accounts =
       json.accounts?.map((data) => CustomerAccount.fromJson(data)) ?? [];
     customer._updateDate = json.updateDate;
@@ -34,6 +36,10 @@ export class Customer {
     return this._accounts;
   }
 
+  get isRemoved(): boolean {
+    return this._isRemoved ?? false;
+  }
+
   get updateDate(): string {
     const now = new Date().toLocaleDateString();
     return new Date(this._updateDate ?? now).toLocaleDateString();
@@ -53,6 +59,7 @@ export interface IGetCustomer {
   fullName?: string;
   phone?: string;
   accounts: IGetCustomerAccount[];
+  isRemoved?: boolean;
   updateDate?: string;
 }
 

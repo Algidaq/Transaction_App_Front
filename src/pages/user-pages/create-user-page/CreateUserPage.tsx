@@ -1,5 +1,4 @@
 import { FunctionComponent, useContext } from 'react';
-import Container from '../../../components/Container/Container';
 
 import { UserRoleServiceContext } from '../../../services/user-role-service/UserRoleServiceContext';
 import { Form, Formik } from 'formik';
@@ -24,6 +23,7 @@ export const CreateUserPage: FunctionComponent<CreateUserPageProps> = () => {
     handleFormSubmit,
     handleOnRoleChange,
     loadUserRoles,
+    handleNavigationAddUserRoles,
   } = useCreateUserPageState({
     roleService: service!,
     userService: userService!,
@@ -31,7 +31,7 @@ export const CreateUserPage: FunctionComponent<CreateUserPageProps> = () => {
   const renderOnError = (): React.ReactNode => {
     return (
       <div className="is-fullheight is-fullwidth flex-center">
-        <Button text="Reload" onClick={loadUserRoles} />
+        <Button text="إعادة تحميل" onClick={loadUserRoles} />
       </div>
     );
   };
@@ -39,7 +39,7 @@ export const CreateUserPage: FunctionComponent<CreateUserPageProps> = () => {
     return (
       <header className="p-3">
         <Gap vertical={8} />
-        <h6>Add New User</h6>
+        <h6>إضافة مستخدم جديد</h6>
         <Gap vertical={16} />
         <Divder />
       </header>
@@ -55,6 +55,7 @@ export const CreateUserPage: FunctionComponent<CreateUserPageProps> = () => {
         borderRadius: '8px',
       }}
       renderHeader={renderHeader}
+      onEmptyClick={handleNavigationAddUserRoles}
     >
       <Formik
         initialValues={initialValues}
@@ -63,7 +64,7 @@ export const CreateUserPage: FunctionComponent<CreateUserPageProps> = () => {
         validate={(values) => {
           if (values.password === values.confirmPassword) return;
           return {
-            confirmPassword: 'Confirm Password must match password',
+            confirmPassword: 'كلمة السر غير صحيحة',
             role: values.role === undefined ? 'User Role is required' : '',
           };
         }}
@@ -79,23 +80,23 @@ export const CreateUserPage: FunctionComponent<CreateUserPageProps> = () => {
               id="fullName"
               name="fullName"
               errors={formik.errors}
-              label="Full Name"
-              placeholder="Enter FullName"
+              label="اسم المستخدم"
+              placeholder="ادخل اسم المستخدم"
               maxLength={56}
               type="text"
             />
             <Input
               id="phone"
               name="phone"
-              label="Phone number"
-              placeholder="Enter Phone number"
+              label="رقم الهاتف"
+              placeholder="ادخل رقم الهاتف"
               maxLength={56}
               inputMode="numeric"
               type="tel"
               className="my-2"
             />
             <Select
-              labelText="Select User Role"
+              labelText="ادخل مسؤلية المستخدم"
               id="role"
               name="role"
               onChange={(e) => handleOnRoleChange(formik, e.target.value)}
@@ -114,8 +115,8 @@ export const CreateUserPage: FunctionComponent<CreateUserPageProps> = () => {
             <Input
               id="password"
               name="password"
-              placeholder="Enter user password"
-              label="Password"
+              placeholder="ادخل كلمة السر"
+              label="كلمة السر"
               type="password"
               className="my-2"
               errors={formik.errors}
@@ -123,14 +124,14 @@ export const CreateUserPage: FunctionComponent<CreateUserPageProps> = () => {
             <Input
               id="confirmPassword"
               name="confirmPassword"
-              placeholder="Retype password"
-              label="Confrim Password"
+              placeholder="إعد إدخال كلمة السر"
+              label="تاكبد كلمة السر"
               type="password"
               className="my-2"
               errors={formik.errors}
             />
             <Button
-              text="Create User"
+              text="إضافة"
               state={state.stateEnum}
               type="submit"
               className="mt-3"

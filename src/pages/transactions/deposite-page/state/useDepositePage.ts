@@ -2,15 +2,11 @@ import { useState, useEffect } from 'react';
 import { ICustomerService } from '../../../../services/customer-service/CustomerService';
 import { DepositePageState } from './DepositePageState';
 import { StateEnum } from '../../../../enums/StateEnum';
-export const useDepositePage = ({
-  customerId,
-  service,
-}: {
-  customerId: string;
-  service: ICustomerService;
-}) => {
+import { useParams } from 'react-router-dom';
+export const useDepositePage = ({ service }: { service: ICustomerService }) => {
   const [state, setState] = useState(new DepositePageState(StateEnum.idel));
-
+  const params = useParams();
+  const customerId = params.id ?? 'N/A';
   useEffect(() => {
     async function getData() {
       loadCustomerById();

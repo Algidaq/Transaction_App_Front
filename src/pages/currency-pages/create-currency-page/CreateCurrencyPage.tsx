@@ -7,6 +7,10 @@ import { Form, Formik } from 'formik';
 import { createCurrencyValidateSchema } from './create-currency-page-state/CreateCurrencyPageForm';
 import Input from '../../../components/Input/Input';
 import Button from '../../../components/Button/Button';
+import { pageStyle } from '../../../utils/utils';
+import PageHeader from '../../../components/PageHeader/PageHeader';
+import Divider from '../../../components/Divider/Divider';
+import Gap from '../../../components/Gap/Gap';
 
 interface CreateCurrencyPageProps {}
 
@@ -18,7 +22,11 @@ const CreateCurrencyPage: React.FunctionComponent<
     service,
   });
   return (
-    <Container>
+    <Container className="is-fullheight" style={pageStyle}>
+      <PageHeader pageTitle="Currency List">
+        <Divider />
+        <Gap vertical={16} />
+      </PageHeader>
       <Formik
         initialValues={initialValues}
         onSubmit={handleOnFormSubmit}
@@ -29,8 +37,8 @@ const CreateCurrencyPage: React.FunctionComponent<
             <Input
               id="name"
               name="name"
-              label="Currency Name"
-              placeholder="Enter Currency Name"
+              label="إسم العملة"
+              placeholder="ادخل إسم العملة"
               errors={formik.errors}
               type="text"
               maxLength={56}
@@ -38,15 +46,15 @@ const CreateCurrencyPage: React.FunctionComponent<
             <Input
               id="symbol"
               name="symbol"
-              label="Currency Symbol"
-              placeholder="Enter Currency Symbol eg. $"
+              label="رمز العملة"
+              placeholder="ادخل رمز العملة"
               errors={formik.errors}
               type="text"
               maxLength={56}
               className="my-2"
             />
             <Button
-              text="Add New Currency"
+              text="إضافة"
               state={state.stateEnum}
               className="mt-3"
               style={{ minWidth: 200, maxWidth: 254 }}

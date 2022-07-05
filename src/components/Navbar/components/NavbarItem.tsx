@@ -8,7 +8,7 @@ interface NabarItemProps {
 
 const NabarItem: FunctionComponent<NabarItemProps> = ({ item }) => {
   const ref = createRef<HTMLAnchorElement>();
-  const [isChecked, toggleCheckbox] = useState(false);
+  const [isChecked, toggleCheckbox] = useState(true);
   useEffect(() => {
     if (ref.current?.classList?.contains('active') && !isChecked) {
       toggleCheckbox(true);

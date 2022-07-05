@@ -22,11 +22,11 @@ export const useCreateRoleForm = (roleService: IUserRoleService) => {
       const role = await roleService.createUserRole(values);
       setState((state) => state.copyWith({ stateEnum: StateEnum.success }));
 
-      toast.success(`Role ${role.role} was created successfully`);
+      toast.success(`تم إنشاء المسؤلية  بنجاح`);
       helpers.resetForm();
     } catch (e: any) {
       const message = getErrorMessage(e);
-      toast.error(message ?? 'An Error Occured');
+      toast.error(message ?? 'حدث خطا ما');
       setState((state) => state.copyWith({ stateEnum: StateEnum.error }));
     }
   };

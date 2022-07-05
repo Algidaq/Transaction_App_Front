@@ -9,6 +9,7 @@ import { FormikHelpers, FormikProps } from 'formik';
 import { Role } from '../../../role-pages/create-role-page/UserRoleForm';
 import { IUserService } from '../../../../services/user-service/UserService';
 import { IPostUser } from '../../../../services/user-service/model/User';
+import { useNavigate } from 'react-router-dom';
 
 export const useCreateUserPageState = ({
   roleService,
@@ -27,6 +28,7 @@ export const useCreateUserPageState = ({
   const [state, setState] = useState<CreateUserPageState>(
     new CreateUserPageState(StateEnum.idel, StateEnum.idel)
   );
+  const navigateTo = useNavigate();
 
   useEffect(() => {
     async function getRoles() {
@@ -71,7 +73,7 @@ export const useCreateUserPageState = ({
       };
       const user = await userService.addNewUser(postUser);
       helpers.resetForm();
-      toast.success(`User ${user.name} has been created successfully`);
+      toast.success(`تم إضافة المستخدم ${user.name} بنجاح`);
       setTimeout(
         () =>
           setState((state) => state.copyWith({ formState: StateEnum.success })),
@@ -94,12 +96,15 @@ export const useCreateUserPageState = ({
     formik.setFieldValue('role', role);
     setState((state) => state.copyWith({ selectedRole: role }));
   };
-
+  const handleNavigationAddUserRoles = () => {
+    navigateTo('/users/roles/add');
+  };
   return {
     state,
     initialValues,
     handleFormSubmit,
     handleOnRoleChange,
     loadUserRoles,
+    handleNavigationAddUserRoles,
   };
 };

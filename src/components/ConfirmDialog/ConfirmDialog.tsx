@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import Button from '../Button/Button';
 import Divider from '../Divider/Divider';
+import Gap from '../Gap/Gap';
 import './ConfirmDialog.scss';
 interface ConfirmDailogProps {
   onCancel?: React.MouseEventHandler<HTMLDivElement | HTMLButtonElement>;
@@ -62,8 +63,9 @@ const DialogContent: React.FunctionComponent<DialogContentProps> = ({
         <p>{content ?? 'No content'}</p>
       </div>
       <div className="buttons">
-        <Button text="cancel" outlined color="is-black" onClick={onCancel} />
-        <Button text="Confrim" outlined onClick={onConfirm} />
+        <Button text="تاكيد" outlined onClick={onConfirm} />
+        <Gap horizontal={16} />
+        <Button text="إلغاء" outlined color="is-black" onClick={onCancel} />
       </div>
     </section>
   );

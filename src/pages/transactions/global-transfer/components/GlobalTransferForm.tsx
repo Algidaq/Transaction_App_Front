@@ -50,7 +50,7 @@ const GlobalTransferForm: React.FunctionComponent<GlobalTransferFormProps> = ({
             <Gap vertical={16} />
             <Select
               value={viewmodel.state.fromAccount?.id}
-              labelText="Select From Account"
+              labelText="اخنر الحساب"
               name="fromAccount"
               options={customer.accounts}
               valueKey={'id'}
@@ -65,7 +65,7 @@ const GlobalTransferForm: React.FunctionComponent<GlobalTransferFormProps> = ({
             <Input
               id="amount"
               name="amount"
-              label="Amount"
+              label="الملبغ"
               placeholder={`Enter Amount`}
               maxLength={56}
               minLength={1}
@@ -75,7 +75,7 @@ const GlobalTransferForm: React.FunctionComponent<GlobalTransferFormProps> = ({
             <Gap vertical={16} />
             <Select
               value={viewmodel.state.toCurrency?.id}
-              labelText="Select To Currency"
+              labelText="الي العملة"
               name="toCurrency"
               options={viewmodel.state.currencies}
               valueKey={'id'}
@@ -94,7 +94,7 @@ const GlobalTransferForm: React.FunctionComponent<GlobalTransferFormProps> = ({
             <Input
               id="rate"
               name="rate"
-              label="Exchange Rate"
+              label="سعر الصرف"
               placeholder="Enter Exchange Rate"
               maxLength={56}
               minLength={1}
@@ -117,7 +117,7 @@ const GlobalTransferForm: React.FunctionComponent<GlobalTransferFormProps> = ({
             <Input
               id="comment"
               name="comment"
-              label="Comment"
+              label="التعليق"
               placeholder="Enter Comment"
               maxLength={256}
               minLength={1}
@@ -127,7 +127,7 @@ const GlobalTransferForm: React.FunctionComponent<GlobalTransferFormProps> = ({
             />
             <Gap vertical={16} />
             <Button
-              text="Transfer"
+              text="تحويل"
               state={viewmodel.state.stateEnum}
               type="submit"
               disabled={!(formik.isValid && formik.dirty)}
@@ -149,7 +149,7 @@ const FromAccountBalance: React.FunctionComponent<FromAccountBalanceProps> = ({
   return (
     <div className="is-fullwidth ">
       <label htmlFor="balance" className=" has-text-weight-semibold">
-        Account Balance
+        رصيد الحساب
       </label>
       <div className="input">{balance ?? 'N/A'}</div>
     </div>
@@ -166,7 +166,7 @@ const CustomerInfoForm: React.FunctionComponent<CustomerInfoFormProps> = ({
   return (
     <div>
       <div style={{ position: 'relative' }}>
-        <h6 className="is-3">Customer Info</h6>
+        <h6 className="is-3">معلومات المستلم</h6>
         <Divider
           style={{
             position: 'absolute',
@@ -184,7 +184,7 @@ const CustomerInfoForm: React.FunctionComponent<CustomerInfoFormProps> = ({
           id="fullName"
           name="fullName"
           label=""
-          placeholder="Enter Customer Name"
+          placeholder="ادخل اسم المستلم"
           maxLength={256}
           minLength={3}
           inputMode="text"
@@ -196,7 +196,7 @@ const CustomerInfoForm: React.FunctionComponent<CustomerInfoFormProps> = ({
           id="phone"
           name="phone"
           label=""
-          placeholder="Enter Customer phone"
+          placeholder="رقم الهاتف"
           maxLength={256}
           minLength={9}
           inputMode="text"
@@ -210,7 +210,7 @@ const CustomerInfoForm: React.FunctionComponent<CustomerInfoFormProps> = ({
           id="bankAccount"
           name="bankAccount"
           label=""
-          placeholder="Bank Account"
+          placeholder="رقم الحساب"
           maxLength={256}
           minLength={4}
           inputMode="text"

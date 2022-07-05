@@ -39,7 +39,7 @@ const StateContainer: React.FunctionComponent<StateContainerProps> = ({
           {getErrorMessage(state.error)}
         </p>
         <Button
-          text="Reload"
+          text="إعادة تحميل"
           className="mx-2"
           textButton
           onClick={onReloadClick}
@@ -54,9 +54,9 @@ const StateContainer: React.FunctionComponent<StateContainerProps> = ({
     }
     return (
       <div className="flex-center is-fullheight">
-        <p className="is-size-6">{emptyText ?? 'Empty'}</p>
+        <p className="is-size-6">{emptyText ?? 'لايوجد محتوى'}</p>
         <Button
-          text={emptyButtonText ?? 'Add'}
+          text={emptyButtonText ?? 'إضافة'}
           className="mx-2"
           textButton
           onClick={onEmptyClick}

@@ -5,7 +5,7 @@ import { Form, Formik } from 'formik';
 import Input from '../../../components/Input/Input';
 import Button from '../../../components/Button/Button';
 import { roleValidationScheam } from './UserRoleForm';
-import { ToastContainer } from 'react-toastify';
+
 import { UserRoleServiceContext } from '../../../services/user-role-service/UserRoleServiceContext';
 import { pageStyle } from '../../../utils/utils';
 import PageHeader from '../../../components/PageHeader/PageHeader';
@@ -18,7 +18,7 @@ const CreateRolePage: FunctionComponent<CreateRolePageProps> = () => {
   );
   return (
     <div className="container is-fullheight" style={pageStyle}>
-      <PageHeader pageTitle="Add User Roles">
+      <PageHeader pageTitle="إضافة مسؤولية المستخدم">
         <Divder />
       </PageHeader>
       <div className="column is-6">
@@ -33,12 +33,12 @@ const CreateRolePage: FunctionComponent<CreateRolePageProps> = () => {
               <Input
                 id="role"
                 name="role"
-                label="Role"
-                placeholder="Enter User Role"
+                label="الاسم"
+                placeholder="أدخل مسؤولية المستخدم"
                 errors={errors}
               />
               <Button
-                text="Create Role"
+                text="إضافة"
                 className="my-4"
                 disabled={!(isValid && dirty)}
                 state={state.stateEnum}

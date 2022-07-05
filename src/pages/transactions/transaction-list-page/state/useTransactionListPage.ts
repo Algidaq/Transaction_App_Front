@@ -16,10 +16,10 @@ export const useTransactionListPage = ({
     new TransactionListPageState(StateEnum.idel)
   );
   const transactionTypes: { id: number; name: string }[] = [
-    { id: 10, name: 'all' },
-    { id: 1, name: 'Deposite' },
-    { id: 2, name: 'Withdraw' },
-    { id: 3, name: 'Global Transfer' },
+    { id: 10, name: 'الكل' },
+    { id: 1, name: 'إيداع' },
+    { id: 2, name: 'سحب/خصم' },
+    { id: 3, name: 'نحويل' },
     { id: 4, name: 'Local Transfer' },
   ];
   useEffect(() => {
@@ -30,17 +30,17 @@ export const useTransactionListPage = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  async function loadAllTransactions(params?: TransactionQueryParams) {
+  async function loadAllTransactions(params: TransactionQueryParams = {}) {
     try {
       setState((state) => state.copyWith({ stateEnum: StateEnum.busy }));
-      const { list: transactions } = await service.getAllTransactions(
-        params ?? {}
-      );
+      const { list: transactions, queryParams } =
+        await service.getAllTransactions(params);
       setState((state) =>
         state.copyWith({
           stateEnum:
             transactions.length > 0 ? StateEnum.success : StateEnum.empty,
           transactions: transactions,
+          queryParams: { ...params, ...queryParams },
         })
       );
     } catch (e: any) {
@@ -49,6 +49,8 @@ export const useTransactionListPage = ({
       );
     }
   }
+
+  /// handle transaction type change
   const handleTransactionTypeChange = async (id: string) => {
     const transactionType = transactionTypes.find(
       (element) => element.id === Number.parseInt(id)
@@ -59,18 +61,9 @@ export const useTransactionListPage = ({
     setState((state) =>
       state.copyWith({
         selectedTransactionType: transactionType,
-        queryParams: { ...state.queryParams, type: type },
       })
     );
-    await loadAllTransactions({ ...state.queryParams, type: type });
-  };
-  const handleOnDateChange = async (value: string) => {
-    setState((state) =>
-      state.copyWith({
-        queryParams: { ...state.queryParams, date: value },
-      })
-    );
-    await loadAllTransactions({ ...state.queryParams, date: value });
+    await loadAllTransactions({ ...state.queryParams, type: type, page: 1 });
   };
 
   function getTransactionTypeFromSelection(type: {
@@ -92,6 +85,28 @@ export const useTransactionListPage = ({
         return;
     }
   }
+  // handle on Date Change
+  const handleOnDateChange = async (value: string) => {
+    await loadAllTransactions({
+      ...state.queryParams,
+      date: value === '' ? undefined : value,
+      page: 1,
+    });
+  };
+  //handle onprev button taap
+  const handleOnPrevClick = async () => {
+    await loadAllTransactions({
+      ...state.queryParams,
+      page: (state.queryParams.currentPage ?? 2) - 1,
+    });
+  };
+  //handle onnext button taap
+  const handleOnNextClick = async () => {
+    await loadAllTransactions({
+      ...state.queryParams,
+      page: state.queryParams.nextPage,
+    });
+  };
 
   return {
     state,
@@ -99,5 +114,7 @@ export const useTransactionListPage = ({
     transactionTypes,
     handleTransactionTypeChange,
     handleOnDateChange,
+    handleOnPrevClick,
+    handleOnNextClick,
   };
 };

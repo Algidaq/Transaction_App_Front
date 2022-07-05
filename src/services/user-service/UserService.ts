@@ -31,9 +31,17 @@ export class UserService extends BaseService implements IUserService {
       const { data, headers }: { data: any[]; headers: AxiosResponseHeaders } =
         await this.get(this.getDefaultQueryParams(params));
       const users = data.map((element: IGetUser) => User.fromJson(element));
+      const header = this.getPaginationHeader(headers);
+      console.log(header);
       return {
         list: users,
         ...this.getPaginationHeader(headers),
+        queryParams: {
+          pages: header.pages,
+          count: header.count,
+          currentPage: header.currentPage,
+          nextPage: header.nextPage,
+        },
       };
     } catch (e) {
       return Promise.reject(e);
