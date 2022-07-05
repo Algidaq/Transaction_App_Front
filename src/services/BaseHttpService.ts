@@ -1,6 +1,20 @@
 import axios from 'axios';
 import { AxiosResponseHeaders } from 'axios';
-
+import { LocalStorageService } from './auth-service/LocalStorage';
+const storage = new LocalStorageService();
+axios.interceptors.request.use((config) => {
+  (config.headers as any).authorization = storage.getTokenItem() ?? '';
+  return config;
+});
+axios.interceptors.response.use(undefined, (error: any) => {
+  let status = error.response ? error.response.status : 0;
+  if (status === 401 || status === 403) {
+    storage.removeToken();
+    window.location.href = '/login';
+    console.log(window.location);
+  }
+  return Promise.reject(error);
+});
 export abstract class BaseService {
   abstract get route(): string;
   private get fullPath(): string {
