@@ -147,6 +147,14 @@ export interface TransactionQueryParams
   /**
    * filter transaction by specific date
    */
+  /**
+   * filter by customer name
+   */
+  fullName?: string;
+  /**
+   * filter by phone number
+   */
+  phone?: string;
   date?: string;
 
   /**

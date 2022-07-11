@@ -109,7 +109,7 @@ const TransactionDetailItem: React.FunctionComponent<
 > = ({ title, value }) => {
   return (
     <>
-      <div className="columns my-0">
+      <div className="columns my-0" style={{ flexDirection: 'row' }}>
         <div className="column is-2">
           <header className="has-text-weight-semibold">{title}</header>
         </div>

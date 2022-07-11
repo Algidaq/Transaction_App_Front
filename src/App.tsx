@@ -96,7 +96,7 @@ const Dashboard: React.FunctionComponent<DashboardProps> = () => {
   return (
     <div className="app is-fullheight">
       <Navbar></Navbar>
-      <main className="container m-1">
+      <main className="container" style={{ margin: '16px' }}>
         <Outlet />
       </main>
     </div>

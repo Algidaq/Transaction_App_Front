@@ -11,6 +11,7 @@ import Select from '../../../components/Select/Select';
 import { pageStyle } from '../../../utils/utils';
 import PageHeader from '../../../components/PageHeader/PageHeader';
 import Pagination from '../../../components/Pagination/Pagination';
+import SearchInput from '../../../components/Search/SearchInput';
 interface UserListPageProps {}
 
 const TransactionListPage: React.FunctionComponent<UserListPageProps> = () => {
@@ -23,6 +24,7 @@ const TransactionListPage: React.FunctionComponent<UserListPageProps> = () => {
     handleOnDateChange,
     handleOnNextClick,
     handleOnPrevClick,
+    handleOnSearchSubmit,
   } = useTransactionListPage({
     service,
   });
@@ -153,7 +155,7 @@ const TransactionListPage: React.FunctionComponent<UserListPageProps> = () => {
   const renderHeader = () => {
     return (
       <PageHeader pageTitle="قائمةالمعاملات">
-        <div className="is-flex">
+        <div className="is-flex is-fullwidth" style={{ flexDirection: 'row' }}>
           <Select
             options={transactionTypes}
             labelText="تصفية حسب نوع المعاملة"
@@ -178,6 +180,8 @@ const TransactionListPage: React.FunctionComponent<UserListPageProps> = () => {
               onChange={(e) => handleOnDateChange(e.target.value)}
             />
           </div>
+          <Gap horizontal={16} />
+          <SearchInput onSubmitSearch={handleOnSearchSubmit} />
         </div>
         <Gap vertical={16} />
       </PageHeader>

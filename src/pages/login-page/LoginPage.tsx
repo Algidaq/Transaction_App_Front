@@ -19,6 +19,7 @@ const LoginPage: React.FunctionComponent<LoginPageProps> = () => {
         className="column is-three-fifths"
         style={{
           maxHeight: 400,
+          maxWidth: 400,
           background: 'white',
           offset: 6,
           borderRadius: 16,

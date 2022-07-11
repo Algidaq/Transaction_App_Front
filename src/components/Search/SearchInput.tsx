@@ -13,7 +13,7 @@ const SearchInput: React.FunctionComponent<SearchInputProps> = ({
       <label htmlFor="search" className="label has-text-weight-semibold">
         تصفية حسب البحث
       </label>
-      <div className="field has-addons">
+      <div className="field has-addons" style={{ flexDirection: 'row' }}>
         <div className="control">
           <input
             id="search"

@@ -6,6 +6,7 @@ import {
 import { TransactionListPageState } from './TransactionListPageState';
 import { StateEnum } from '../../../../enums/StateEnum';
 import { TransactionType } from '../../../../types/TransactionType';
+import { isNumOnly } from '../../../../utils/utils';
 
 export const useTransactionListPage = ({
   service,
@@ -108,6 +109,23 @@ export const useTransactionListPage = ({
     });
   };
 
+  const handleOnSearchSubmit = async (query: string) => {
+    if (query.trim() === '') {
+      await loadAllTransactions({
+        ...state.queryParams,
+        phone: undefined,
+        fullName: undefined,
+      });
+      return;
+    }
+    const isnum = isNumOnly(query);
+    await loadAllTransactions({
+      ...state.queryParams,
+      phone: isnum ? query.trim() : undefined,
+      fullName: isnum ? undefined : query.trim(),
+    });
+  };
+
   return {
     state,
     loadAllTransactions,
@@ -116,5 +134,6 @@ export const useTransactionListPage = ({
     handleOnDateChange,
     handleOnPrevClick,
     handleOnNextClick,
+    handleOnSearchSubmit,
   };
 };
