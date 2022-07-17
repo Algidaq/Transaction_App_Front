@@ -36,7 +36,7 @@ export const useGlobalTransferForm = ({
   const initialValues: IGlobalTransferFrom = {
     fromAccount: initialFromAccount,
     fullName: '',
-    amount: 0,
+    amount: '',
   };
   async function handleOnFormSubmit(
     values: IGlobalTransferFrom,
@@ -68,7 +68,7 @@ export const useGlobalTransferForm = ({
     return {
       customer: customer.toGetJson(),
       fromAccount: state.fromAccount!.toGetJson(),
-      amount: values.amount,
+      amount: Number.parseFloat(values.amount.replaceAll(',', '')),
       exchangeRate: {
         rate: Number.parseFloat(values.rate ?? '-1') ?? -1,
         toCurrency: state.toCurrency!.toGetJson(),
@@ -130,6 +130,7 @@ export const useGlobalTransferForm = ({
   ) {
     if (key !== 'Enter') return;
     try {
+      // eslint-disable-next-line no-eval
       const value = eval(formik.values.rate ?? '');
       if (isNaN(value)) return;
       formik.setFieldValue('rate', value);
@@ -148,10 +149,15 @@ export const useGlobalTransferForm = ({
     formik: FormikProps<IGlobalTransferFrom>
   ): string {
     if (isNaN(Number.parseFloat(formik.values?.rate ?? 'N/A'))) return '';
-    if (formik.errors.amount || formik.values.amount < 1) return '';
+    if (
+      formik.errors.amount ||
+      Number.parseFloat(formik.values.amount.replaceAll(',', '')) < 1
+    )
+      return '';
     if (formik.errors.rate || (formik.values?.rate ?? -1) <= 0) return '';
     const rate = Number.parseFloat(formik.values.rate ?? '1');
-    const exchangeRate = formik.values.amount * rate;
+    const exchangeRate =
+      Number.parseFloat(formik.values.amount.replaceAll(',', '')) * rate;
     if (exchangeRate === 0) return '';
     return `exchanged amount is ${exchangeRate.toLocaleString('en')} ${
       state.toCurrency?.symbol
@@ -183,7 +189,9 @@ export const globalTransferValidationSchema = Yup.object({
   fromAccount: Yup.object({ id: Yup.string().required() }).required(
     'اختار الحساب المرسل منه'
   ),
-  amount: Yup.number().required(required).moreThan(0, invalid),
+  amount: Yup.string()
+    .required(required)
+    .matches(/[0-9,]/),
   comment: Yup.string(),
   toCurrency: Yup.object({ id: Yup.number().required() }).required(),
   rate: Yup.string().matches(/[0-9./]/),

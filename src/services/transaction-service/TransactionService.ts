@@ -9,6 +9,8 @@ import { ICommonQueryParams } from '../../types/query.params';
 import { AxiosResponseHeaders } from 'axios';
 import { IGetList } from '../../types/IGetList';
 
+import { IGetCustomer, Customer } from '../customer-service/model/Customer';
+
 export abstract class ITransactionService {
   abstract handleDeposite(deposite: IPostDeposite): Promise<Transaction>;
   abstract handleWithdraw(deposite: IPostDeposite): Promise<Transaction>;
@@ -24,6 +26,9 @@ export abstract class ITransactionService {
   ): IPostExchangeRate;
 
   abstract getTransactionById(id: string): Promise<Transaction>;
+  abstract getCustomerTransactionStatement(
+    body: IGetCustomerStatement
+  ): Promise<ITransactionStatement>;
 }
 
 export class TransactionService
@@ -37,6 +42,25 @@ export class TransactionService
   }
   get route(): string {
     return '/transactions' + (this._route ?? '');
+  }
+  async getCustomerTransactionStatement(
+    body: IGetCustomerStatement
+  ): Promise<ITransactionStatement> {
+    this.route = '/print';
+    try {
+      const {
+        data,
+      }: { data: { customer: IGetCustomer; transactions: IGetTransaction[] } } =
+        await this.post(body);
+      return {
+        customer: Customer.fromJson(data.customer),
+        transactions: data.transactions.map<Transaction>((value) =>
+          Transaction.fromJson(value)
+        ),
+      };
+    } catch (e) {
+      return Promise.reject(e);
+    }
   }
   async getAllTransactions(
     params: TransactionQueryParams
@@ -120,6 +144,7 @@ export interface IPostDeposite {
   amount: number;
   customer: IGetCustomerAccount;
   fromAccount: IGetCustomerAccount;
+  from?: string;
   comment?: string;
 }
 
@@ -161,4 +186,15 @@ export interface TransactionQueryParams
    * filter by transaction type [``deposite``,``withdraw``,``localTransfer``,``globalTransfer``]
    */
   type?: string;
+}
+
+export interface IGetCustomerStatement {
+  customerId: string;
+  fromDate: string;
+  toDate: string;
+}
+
+export interface ITransactionStatement {
+  customer: Customer;
+  transactions: Transaction[];
 }

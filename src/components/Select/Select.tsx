@@ -6,6 +6,7 @@ interface SelectProps<T> extends React.SelectHTMLAttributes<HTMLSelectElement> {
   errors: FormikErrors<any>;
   errorText?: string;
   labelText?: string;
+  firstOptionText?: string;
 }
 
 const Select = ({
@@ -13,6 +14,7 @@ const Select = ({
   valueKey,
   value,
   labelText,
+  firstOptionText,
   name,
   errors,
   errorText,
@@ -31,6 +33,7 @@ const Select = ({
         className="select is-block is-fullwidth"
         {...rest}
       >
+        {firstOptionText && <option>{firstOptionText}</option>}
         {options.map((option, index) => {
           return (
             <option key={index} value={option[valueKey] ?? ''}>

@@ -10,11 +10,7 @@ import { useState } from 'react';
 import { DepositeFormState } from './DepositeFormState';
 import { StateEnum } from '../../../../../../enums/StateEnum';
 import { toast } from 'react-toastify';
-import {
-  getErrorMessage,
-  required,
-  invalid,
-} from '../../../../../../utils/utils';
+import { getErrorMessage, required } from '../../../../../../utils/utils';
 import { TransactionType } from '../../../../../../types/TransactionType';
 import { Transaction } from '../../../../../../services/transaction-service/model/Transaction';
 export const useDepositeForm = ({
@@ -41,16 +37,17 @@ export const useDepositeForm = ({
   const initialValues: IDepositeForm = {
     fromAccount:
       customer.accounts.length > 0 ? customer.accounts[0] : undefined,
-    amount: 0,
+    amount: '',
     comment: '',
   };
   const getDeposite = (values: IDepositeForm): IPostDeposite => {
     return {
-      amount: values.amount,
+      amount: Number.parseFloat(values.amount.replace(',', '')),
       customer: customer.toGetJson(),
       fromAccount: values.fromAccount!.toGetJson(),
       comment:
         values.comment === '' || !values.comment ? 'N/A' : values.comment,
+      from: values.from,
     };
   };
   // handle form Submition
@@ -115,12 +112,16 @@ export const useDepositeForm = ({
 
 export interface IDepositeForm {
   fromAccount?: CustomerAccount;
-  amount: number;
+  amount: string;
   comment?: string;
+  from?: string;
 }
 
 export const validateDepositeSchema = Yup.object({
   fromAccount: Yup.object({ id: Yup.string().required() }),
-  amount: Yup.number().required(required).moreThan(0, invalid),
+  amount: Yup.string()
+    .required(required)
+    .matches(/[0-9,]/),
+  from: Yup.string(),
   comment: Yup.string(),
 });

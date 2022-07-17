@@ -23,6 +23,7 @@ import TransactionDetail from './pages/transactions/transaction-detail-page/Tran
 import LoginPage from './pages/login-page/LoginPage';
 
 import { AuthServiceContext } from './services/auth-service/AuthServiceContext';
+import PrintPage from './pages/print-page/PrintPage';
 
 const App: React.FC<{}> = () => {
   const service = React.useContext(AuthServiceContext)!;
@@ -80,6 +81,13 @@ const App: React.FC<{}> = () => {
           ) : (
             <LoginPage />
           )
+        }
+      />
+
+      <Route
+        path="/print/:id"
+        element={
+          !service.isLoggedIn ? <Navigate to="/login" replace /> : <PrintPage />
         }
       />
     </Routes>

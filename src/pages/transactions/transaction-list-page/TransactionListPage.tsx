@@ -60,6 +60,16 @@ const TransactionListPage: React.FunctionComponent<UserListPageProps> = () => {
       </div>
     );
   };
+  const renderDepositeInfo = (value: Transaction) => {
+    return (
+      <div>
+        <p>
+          <span className="is-size-6 has-text-weight-semibold ">من :</span>
+          <span className="is-size-6 has-text-link">{` ${value.depositeInfo.from}`}</span>
+        </p>
+      </div>
+    );
+  };
   const renderGlobalTransferInfo = (value: Transaction) => {
     return (
       <div>
@@ -86,6 +96,7 @@ const TransactionListPage: React.FunctionComponent<UserListPageProps> = () => {
       </div>
     );
   };
+
   const renderToAccountColumn = (value: Transaction) => {
     if (value.type === 'deposite') return renderFromAccountColumn(value);
     if (value.type === 'withdraw') return renderFromAccountColumn(value);
@@ -106,7 +117,10 @@ const TransactionListPage: React.FunctionComponent<UserListPageProps> = () => {
       header: 'من',
       key: 'id',
       isRenderable: true,
-      render: renderFromAccountColumn,
+      render: (transaction) =>
+        transaction.type === 'deposite'
+          ? renderDepositeInfo(transaction)
+          : renderFromAccountColumn(transaction),
     },
     {
       header: 'نوع العملية',

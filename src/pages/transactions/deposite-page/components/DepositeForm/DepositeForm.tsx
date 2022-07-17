@@ -11,6 +11,7 @@ import Input from '../../../../../components/Input/Input';
 import Gap from '../../../../../components/Gap/Gap';
 import Button from '../../../../../components/Button/Button';
 import { TransactionType } from '../../../../../types/TransactionType';
+import { isNumOnly } from '../../../../../utils/utils';
 interface DepositeFormProps {
   customer: Customer;
   transactionType: TransactionType;
@@ -33,8 +34,13 @@ const DepositeForm: React.FunctionComponent<DepositeFormProps> = ({
         onSubmit={state.handleOnFormSubmit}
         validationSchema={validateDepositeSchema}
         validate={(values) => {
-          if (values.fromAccount) return;
-          return { fromAccount: 'اختر الحساب' };
+          if (!values.fromAccount) return { fromAccount: 'اختر الحساب' };
+          if (transactionType === 'deposite') {
+            if (values.from === undefined || values.from?.trim().length < 3) {
+              return { from: 'الحقل مطلوب' };
+            }
+          }
+          return;
         }}
       >
         {(formik) => (
@@ -90,13 +96,36 @@ const DepositeForm: React.FunctionComponent<DepositeFormProps> = ({
               minLength={1}
               inputMode="numeric"
               errors={formik.errors}
+              onChange={(e) => {
+                const value = e.target.value.replaceAll(',', '');
+                const amount = isNumOnly(value)
+                  ? parseFloat(value).toLocaleString('en')
+                  : value;
+                formik.setFieldValue('amount', amount);
+              }}
             />
+            {transactionType === 'deposite' && (
+              <>
+                <Gap vertical={16} />
+                <Input
+                  id="from"
+                  name="from"
+                  label="من"
+                  placeholder="من"
+                  maxLength={256}
+                  minLength={1}
+                  inputMode="text"
+                  type="text"
+                  errors={formik.errors}
+                />
+              </>
+            )}
             <Gap vertical={16} />
             <Input
               id="comment"
               name="comment"
               label="التعليق"
-              placeholder="Enter Comment"
+              placeholder="التعليق"
               maxLength={256}
               minLength={1}
               inputMode="text"

@@ -11,13 +11,13 @@ export interface TableProps
 const Table: React.FunctionComponent<TableProps> = ({
   columns,
   rows,
-
+  className,
   isFullWidth = true,
 }) => {
   const classes = isFullWidth ? 'is-fullwidth' : '';
   return (
     <div className="table-container is-fullwidth">
-      <table className={`table is-hoverable ${classes}`}>
+      <table className={`table is-hoverable ${classes} ${className ?? ''}`}>
         <TableHeader columns={columns} />
         <TableBody columns={columns} rows={rows} />
       </table>

@@ -8,6 +8,8 @@ import {
   CustomerQueryParams,
 } from '../../../../services/customer-service/CustomerService';
 import { Customer } from '../../../../services/customer-service/model/Customer';
+import * as Yup from 'yup';
+import { useNavigate } from 'react-router-dom';
 
 export const useCustomerListPage = ({
   service,
@@ -22,7 +24,11 @@ export const useCustomerListPage = ({
     getData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
+  const initialValues: IPrintStatementForm = {
+    fromDate: '',
+    toDate: new Date(Date.now()).toLocaleDateString(),
+  };
+  const navigate = useNavigate();
   const loadAllCustomers = async (params: CustomerQueryParams = {}) => {
     try {
       setState((state) => state.copyWith({ stateEnum: StateEnum.busy }));
@@ -110,6 +116,34 @@ export const useCustomerListPage = ({
     });
   };
 
+  const showStatementDialog = (customer: Customer) => {
+    setState((state) =>
+      state.copyWith({ selectedCustomer: customer, showStatementDialog: true })
+    );
+  };
+
+  const hideStatementDialog = () => {
+    setState((state) =>
+      state.copyWith({
+        selectedCustomer: undefined,
+        showStatementDialog: false,
+      })
+    );
+  };
+  const handleOnConfirmPrintStatement = (values: IPrintStatementForm) => {
+    const search = new URLSearchParams({
+      fromDate: values.fromDate,
+      toDate: values.toDate,
+    }).toString();
+    navigate({ pathname: `/print/${state.selectedCustomer?.id}`, search });
+    setState((state) =>
+      state.copyWith({
+        selectedCustomer: undefined,
+        showStatementDialog: false,
+      })
+    );
+  };
+
   return {
     state,
     loadAllCustomers,
@@ -119,5 +153,19 @@ export const useCustomerListPage = ({
     handleOnSearchSubmit,
     handleOnNextClick,
     handleOnPrevClick,
+    showStatementDialog,
+    hideStatementDialog,
+    handleOnConfirmPrintStatement,
+    initialValues,
   };
 };
+
+interface IPrintStatementForm {
+  fromDate: string;
+  toDate: string;
+}
+
+export const statementValidateSchema = Yup.object({
+  fromDate: Yup.date().required('الرجاء اختيار التاريخ'),
+  toDate: Yup.date().required('الرجاء اختيار التاريخ'),
+});

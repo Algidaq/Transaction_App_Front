@@ -44,7 +44,8 @@ const AddCustomerAccountPage: React.FunctionComponent<
         <Select
           id="currency"
           name="currency"
-          labelText="Select Currency"
+          labelText="اختر العملة"
+          firstOptionText="---العملات---"
           options={viewmodel.state.currencies}
           value={viewmodel.state.selectedCurrency?.id}
           onChange={(e) => viewmodel.handleOnCurrencyChange(e.target.value)}

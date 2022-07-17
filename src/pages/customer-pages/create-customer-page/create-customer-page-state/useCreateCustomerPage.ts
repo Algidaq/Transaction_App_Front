@@ -10,6 +10,7 @@ import { FormikHelpers, FormikProps } from 'formik';
 import { ICustomerService } from '../../../../services/customer-service/CustomerService';
 import { IPostCustomer } from '../../../../services/customer-service/model/Customer';
 import { IPostCustomerAccount } from '../../../../services/customer-service/model/Account';
+import { Currency } from '../../../../services/currency-service/model/Currency';
 
 export const useCreateCustomerPage = ({
   currencyService,
@@ -37,7 +38,11 @@ export const useCreateCustomerPage = ({
   const loadCurrencies = async () => {
     try {
       setState((state) => state.copyWith({ currencyState: StateEnum.busy }));
-      const currencies = await currencyService.getAllCurrency();
+      const _currencies = await currencyService.getAllCurrency();
+      const currencies = [
+        Currency.fromJson({ id: -1, name: 'اختر العملة', symbol: '' }),
+        ..._currencies,
+      ];
       setState((state) =>
         state.copyWith({
           currencies,

@@ -570,3 +570,36 @@ html {
   padding-top: auto !important;
   padding-bottom: auto !important;
 }
+
+.floating-button {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  height: 48px;
+  width: 48px;
+  padding: 8px;
+  border-radius: 50%;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  -ms-border-radius: 50%;
+  -o-border-radius: 50%;
+}
+
+@media print {
+  body {
+    zoom: 80%;
+    background-color: white !important;
+  }
+
+  * {
+    background-color: white !important;
+  }
+
+  #root {
+    background-color: white !important;
+  }
+
+  .floating-button {
+    display: none;
+  }
+}

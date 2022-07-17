@@ -6,7 +6,6 @@ import { StateEnum } from '../../../../enums/StateEnum';
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { getErrorMessage } from '../../../../utils/utils';
-import { Currency } from '../../../../services/currency-service/model/Currency';
 
 export const useAddCustomerAccountPage = ({
   customerService,
@@ -35,21 +34,12 @@ export const useAddCustomerAccountPage = ({
         customerService.getCustomerById(customerId),
         currencyService.getAllCurrency(),
       ]);
-      const allCurrency = Currency.fromJson({
-        id: -1,
-        name: 'Select Currency',
-        symbol: '',
-      });
-      const updatedCurrencies = [allCurrency, ...currencies];
+
       setState((state) =>
         state.copyWith({
           stateEnum:
-            updatedCurrencies.length === 0
-              ? StateEnum.empty
-              : StateEnum.success,
-          currencies: updatedCurrencies,
-          selectedCurrency:
-            updatedCurrencies.length === 0 ? undefined : allCurrency,
+            currencies.length === 0 ? StateEnum.empty : StateEnum.success,
+          currencies: currencies,
           customer: customer,
         })
       );
@@ -61,18 +51,20 @@ export const useAddCustomerAccountPage = ({
   }
 
   const handleOnCurrencyChange = (id: string) => {
-    if (id === '-1') return;
-    const currency = state.currencies.find(
+    const selectedCurrency = state.currencies.find(
       (element) => element.id === Number.parseInt(id)
     );
-    if (!currency) return;
-    const index = state.customer!.accounts.findIndex(
-      (element) => element.currency.id !== currency.id
-    );
+    if (!selectedCurrency) return;
+
+    const accountNotExists =
+      state.customer!.accounts.findIndex(
+        (element) => element.currency.id !== selectedCurrency.id
+      ) === -1;
     setState((state) =>
       state.copyWith({
-        selectedCurrency: currency,
-        isButtonDisabled: index === -1,
+        selectedCurrency: selectedCurrency,
+        isButtonDisabled:
+          accountNotExists && state.customer!.accounts.length > 0,
       })
     );
   };

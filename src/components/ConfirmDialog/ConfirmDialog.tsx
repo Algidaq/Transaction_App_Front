@@ -7,17 +7,21 @@ import './ConfirmDialog.scss';
 interface ConfirmDailogProps {
   onCancel?: React.MouseEventHandler<HTMLDivElement | HTMLButtonElement>;
   onConfirm?: React.MouseEventHandler<HTMLDivElement | HTMLButtonElement>;
+  showActions?: boolean;
   content?: string;
   title?: string;
   showDialog: boolean;
+  children?: React.ReactNode;
 }
 
 const ConfirmDailog: React.FunctionComponent<ConfirmDailogProps> = ({
   showDialog,
   onCancel,
   onConfirm,
+  showActions = true,
   title,
   content,
+  children,
 }) => {
   return (
     <>
@@ -33,6 +37,8 @@ const ConfirmDailog: React.FunctionComponent<ConfirmDailogProps> = ({
             title={title}
             content={content}
             onConfirm={onConfirm}
+            children={children}
+            showActions={showActions}
           />,
           document.getElementById('dialog-root')!
         )}
@@ -40,10 +46,11 @@ const ConfirmDailog: React.FunctionComponent<ConfirmDailogProps> = ({
   );
 };
 
-interface DialogContentProps {
+interface DialogContentProps extends React.AllHTMLAttributes<HTMLDivElement> {
   onCancel?: React.MouseEventHandler<HTMLDivElement | HTMLButtonElement>;
   onConfirm?: React.MouseEventHandler<HTMLDivElement | HTMLButtonElement>;
   content?: string;
+  showActions: boolean;
   title?: string;
 }
 
@@ -51,7 +58,9 @@ const DialogContent: React.FunctionComponent<DialogContentProps> = ({
   onCancel,
   onConfirm,
   content,
+  showActions,
   title,
+  children,
 }) => {
   return (
     <section className="confirm-dialog container">
@@ -60,13 +69,16 @@ const DialogContent: React.FunctionComponent<DialogContentProps> = ({
       </header>
       <Divider />
       <div className="content">
-        <p>{content ?? 'No content'}</p>
+        {content && <p>{content ?? 'No content'}</p>}
+        {children}
       </div>
-      <div className="buttons">
-        <Button text="تاكيد" outlined onClick={onConfirm} />
-        <Gap horizontal={16} />
-        <Button text="إلغاء" outlined color="is-black" onClick={onCancel} />
-      </div>
+      {showActions && (
+        <div className="buttons">
+          <Button text="تاكيد" outlined onClick={onConfirm} />
+          <Gap horizontal={16} />
+          <Button text="إلغاء" outlined color="is-black" onClick={onCancel} />
+        </div>
+      )}
     </section>
   );
 };

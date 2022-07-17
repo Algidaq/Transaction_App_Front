@@ -5,6 +5,7 @@ import {
 } from '../../customer-service/model/Account';
 import { TransactionType } from '../../../types/TransactionType';
 import { IGetExchangeRate, ExchangeRate } from './ExchangeRate';
+import { DepositeInfo, IGetDepositeInfo } from './DepositeInfo';
 import {
   GlobalTransferInfo,
   IGetGlobalTransferInfo,
@@ -20,7 +21,9 @@ export class Transaction {
   private _balanceSnapshot?: number;
   private _exchangeRate!: ExchangeRate;
   private _transactionInfo!: GlobalTransferInfo;
+  public depositeInfo!: DepositeInfo;
   private _comment?: string;
+
   private constructor() {}
   static fromJson(json: Partial<IGetTransaction>): Transaction {
     const tran = new Transaction();
@@ -35,6 +38,7 @@ export class Transaction {
     tran._transactionInfo = GlobalTransferInfo.fromJson(
       json.transactionInfo ?? {}
     );
+    tran.depositeInfo = DepositeInfo.fromJson(json.depositeInfo ?? {});
     tran._comment = json.comment;
     return tran;
   }
@@ -45,7 +49,7 @@ export class Transaction {
 
   get date(): string {
     const now = new Date().toLocaleDateString('en');
-    return new Date(this._date ?? now).toLocaleDateString('en');
+    return new Date(this._date ?? now).toISOString().slice(0, 10);
   }
 
   get fromCustomer(): Customer {
@@ -118,5 +122,6 @@ export interface IGetTransaction {
   balanceSnapShot: number;
   exchangeRate: IGetExchangeRate;
   transactionInfo: IGetGlobalTransferInfo;
+  depositeInfo: IGetDepositeInfo;
   comment: string;
 }

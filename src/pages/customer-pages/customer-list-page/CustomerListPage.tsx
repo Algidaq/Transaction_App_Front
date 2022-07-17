@@ -7,12 +7,17 @@ import StateContainer from '../../../components/StateContainer/StateContainer';
 import { Column } from '../../../components/Table/model/Column';
 import Table from '../../../components/Table/Table';
 import { CustomerServiceContext } from '../../../services/customer-service/context/CustomerServiceContext';
-import { useCustomerListPage } from './state/useCustomerListPage';
+import {
+  statementValidateSchema,
+  useCustomerListPage,
+} from './state/useCustomerListPage';
 import { Customer } from '../../../services/customer-service/model/Customer';
 import { pageStyle } from '../../../utils/utils';
 import PageHeader from '../../../components/PageHeader/PageHeader';
 import SearchInput from '../../../components/Search/SearchInput';
 import Pagination from '../../../components/Pagination/Pagination';
+import { Form, Formik } from 'formik';
+import Input from '../../../components/Input/Input';
 interface UserListPageProps {}
 
 const CustomerListPage: React.FunctionComponent<UserListPageProps> = () => {
@@ -26,6 +31,10 @@ const CustomerListPage: React.FunctionComponent<UserListPageProps> = () => {
     handleOnSearchSubmit,
     handleOnNextClick,
     handleOnPrevClick,
+    handleOnConfirmPrintStatement,
+    showStatementDialog,
+    hideStatementDialog,
+    initialValues,
   } = useCustomerListPage({
     service,
   });
@@ -56,6 +65,18 @@ const CustomerListPage: React.FunctionComponent<UserListPageProps> = () => {
         >
            إضافة حساب
         </Link>
+
+        {value.accounts.length > 0 && (
+          <>
+            <Gap horizontal={8} vertical={0} />
+            <Button
+              text="طباعة المعاملات"
+              textButton
+              onClick={(e) => showStatementDialog(value)}
+              className="is-6 mt-2"
+            />
+          </>
+        )}
         <Gap horizontal={8} vertical={0} />
         <Button
           text="حذف"
@@ -148,7 +169,7 @@ const CustomerListPage: React.FunctionComponent<UserListPageProps> = () => {
   const renderHeader = () => {
     return (
       <PageHeader pageTitle="قائمة العملاء">
-        <div className="is-flex">
+        <div className="is-flex" style={{ flexDirection: 'row' }}>
           <SearchInput onSubmitSearch={handleOnSearchSubmit} />
         </div>
         <Gap horizontal={16} />
@@ -188,6 +209,40 @@ const CustomerListPage: React.FunctionComponent<UserListPageProps> = () => {
         onConfirm={handleOnDeleteConfrim}
         onCancel={handleOnCancel}
       />
+      <ConfirmDailog
+        showDialog={state.showStatementDialog}
+        title="طباعة"
+        showActions={false}
+      >
+        <Formik
+          initialValues={initialValues}
+          onSubmit={handleOnConfirmPrintStatement}
+          validationSchema={statementValidateSchema}
+        >
+          {(formik) => (
+            <Form>
+              <Input id="fromDate" name="fromDate" label="من" type="date" />
+              <Input id="toDate" name="toDate" label="الي" type="date" />
+              <Gap vertical={32} />
+              <div className="buttons">
+                <Button
+                  text="تاكيد"
+                  outlined
+                  onClick={() => handleOnConfirmPrintStatement(formik.values)}
+                  disabled={!(formik.isValid && formik.dirty)}
+                />
+                <Gap horizontal={16} />
+                <Button
+                  text="إلغاء"
+                  outlined
+                  color="is-black"
+                  onClick={hideStatementDialog}
+                />
+              </div>
+            </Form>
+          )}
+        </Formik>
+      </ConfirmDailog>
     </>
   );
 };

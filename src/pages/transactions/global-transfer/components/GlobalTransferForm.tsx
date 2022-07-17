@@ -14,6 +14,7 @@ import Gap from '../../../../components/Gap/Gap';
 import Input from '../../../../components/Input/Input';
 import Select from '../../../../components/Select/Select';
 import Divider from '../../../../components/Divider/Divider';
+import { isNumOnly } from '../../../../utils/utils';
 
 interface GlobalTransferFormProps {
   currencies: Currency[];
@@ -71,6 +72,13 @@ const GlobalTransferForm: React.FunctionComponent<GlobalTransferFormProps> = ({
               minLength={1}
               inputMode="numeric"
               errors={formik.errors}
+              onChange={(e) => {
+                const value = e.target.value.replaceAll(',', '');
+                const amount = isNumOnly(value)
+                  ? parseFloat(value).toLocaleString('en')
+                  : value;
+                formik.setFieldValue('amount', amount);
+              }}
             />
             <Gap vertical={16} />
             <Select
@@ -79,6 +87,7 @@ const GlobalTransferForm: React.FunctionComponent<GlobalTransferFormProps> = ({
               name="toCurrency"
               options={viewmodel.state.currencies}
               valueKey={'id'}
+              firstOptionText="اختر العملة"
               renderContent={(item) => `${item.name} ${item.symbol}`}
               errors={formik.errors}
               errorText={'To Currency is Required'}
@@ -171,7 +180,7 @@ const CustomerInfoForm: React.FunctionComponent<CustomerInfoFormProps> = ({
           style={{
             position: 'absolute',
             top: '50%',
-            left: 'calc(50% + 58px)',
+            right: '0px',
             transform: 'translate(-50%,-50%)',
             height: 0.5,
             width: '70%',
@@ -179,7 +188,7 @@ const CustomerInfoForm: React.FunctionComponent<CustomerInfoFormProps> = ({
           }}
         />
       </div>
-      <div className="is-flex">
+      <div className="is-flex" style={{ flexDirection: 'row' }}>
         <Input
           id="fullName"
           name="fullName"
@@ -205,7 +214,7 @@ const CustomerInfoForm: React.FunctionComponent<CustomerInfoFormProps> = ({
         />
       </div>
       <Gap vertical={16} />
-      <div className="is-flex">
+      <div className="is-flex" style={{ flexDirection: 'row' }}>
         <Input
           id="bankAccount"
           name="bankAccount"

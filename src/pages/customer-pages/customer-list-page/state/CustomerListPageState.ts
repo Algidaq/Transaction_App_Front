@@ -13,6 +13,7 @@ export class CustomerListPageState extends BaseState {
       limit: 1,
       currentPage: 1,
     },
+    public readonly showStatementDialog = false,
     error?: Object
   ) {
     super(stateEnum, error);
@@ -29,6 +30,7 @@ export class CustomerListPageState extends BaseState {
     showDialog,
     selectedCustomer,
     queryParams,
+    showStatementDialog,
     error,
   }: {
     stateEnum?: StateEnum | undefined;
@@ -36,6 +38,7 @@ export class CustomerListPageState extends BaseState {
     showDialog?: boolean;
     selectedCustomer?: Customer;
     queryParams?: CustomerQueryParams;
+    showStatementDialog?: boolean;
     error?: Object | undefined;
   }): CustomerListPageState {
     return new CustomerListPageState(
@@ -44,6 +47,7 @@ export class CustomerListPageState extends BaseState {
       showDialog ?? this.showDialog,
       selectedCustomer ?? this.selectedCustomer,
       queryParams ?? this.queryParams,
+      showStatementDialog ?? this.showStatementDialog,
       error ?? this.error
     );
   }
